@@ -21,8 +21,13 @@ class Auction
 		$('.compact-table 	tbody').find('tr').each(function(){
 			const $tr = $(this);
 
-			const name = $tr.find('td').text();
-			console.log(name);
+			const name = $tr.find('td:first a').text();
+			if (name.search(new RegExp(value, 'i')) === -1) {
+				$tr.css('display', 'none');
+			}
+			else {
+				$tr.css('display', 'table-row');
+			}
 		});
 	}
 }
