@@ -8,7 +8,7 @@ class Challenges
 				break;
 
 			case 'outgoing':
-				this.displayTooltipIncoming();
+				// Nothing here yet
 				break;
 		}
 		
