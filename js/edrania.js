@@ -128,7 +128,7 @@ class TeamGame
 		$input.on('change', (event) => {this.filterList(event)});
 
 		const $label = $('<label>');
-		$label.append($input).append(' Dölj spel utanför din grad');
+		$label.append($input).append(' Visa bara för din grad');
 
 		$('.compact-table').before($label);
 	}
