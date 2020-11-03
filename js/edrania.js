@@ -184,6 +184,9 @@ else if (location.pathname === '/TeamGame/') {
 else if (location.pathname === '/TeamGame/Create') {
 	new TeamGame('create');
 }
-else if (location.pathname.search('/MyGlad/Challenges') > -1) {
-	new Challenges();
+else if (location.pathname.search('/MyGlad/Challenges/In') > -1) {
+	new Challenges('incoming');
+}
+else if (location.pathname.search('/MyGlad/Challenges/Out') > -1) {
+	new Challenges('outgoing');
 }
