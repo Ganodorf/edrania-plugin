@@ -1,0 +1,18 @@
+.chrome-plugin-btn {
+	display: block;
+	padding: 2px 4px;
+	border: 1px solid #538234;
+	background: #71b346;
+	text-decoration: none;
+	color: #fff;
+	margin-bottom: 5px; 
+	border-radius: 4px;
+}
+.chrome-plugin-btn:hover {
+	color: #fff;
+}
+
+.chrome-plugin-challenger {
+	font-size: 10px;
+	margin-left: 5px;
+}
