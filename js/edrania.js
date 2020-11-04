@@ -8,6 +8,9 @@ function getPlayerLevel() {
 
 prefillClass = new Prefill();
 
+// Init hoover info for links
+new HooverInfo();
+
 if (location.pathname === '/Auction') {
 	new Auction();
 }
