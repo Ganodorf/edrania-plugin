@@ -36,18 +36,39 @@ class HooverInfo
 		const $a = $(event.currentTarget);
 		const href = $a.attr('href');
 
+		let type = '';
+
 		// Check if link match weapon
 		if (href.search('/Vendor/Display/') > -1) {
-			if (this.cache[href] !== undefined) {
+			type = 'weapon';			
+		}
+		else if (href === '/MyGlad/Profile/Attributes') {
+			type = 'attributes';
+		}
+
+		if (type === '') {
+			return false;
+		}
+
+		if (this.cache[href] !== undefined) {
+			if (type === 'weapon') {
 				this.renderWeaponInfoBox(this.cache[href], true);
 			}
-			else {
-				this.isLoading = true;
-				$.get(href, (html) => {
+			else if (type === 'attributes') {
+				this.renderAttributesInfoBox(this.cache[href], true);
+			}
+		}
+		else {
+			this.isLoading = true;
+			$.get(href, (html) => {
+				if (type === 'weapon') {
 					this.cache[href] = this.renderWeaponInfoBox(html, false);
-					this.isLoading = false;
-				});
-			}			
+				}
+				else if (type === 'attributes') {
+					this.cache[href] = this.renderAttributesInfoBox(html, false);
+				}
+				this.isLoading = false;
+			});
 		}
 	}
 
@@ -63,7 +84,7 @@ class HooverInfo
 		}
 		else {
 			container = $(html).find('.container');
-			// Rremove go back link
+			// Remove things we dont want to show
 			container.find('.nav-arrow, .description, br:first, br:last').remove();
 			container = container.html();
 		}
@@ -71,14 +92,42 @@ class HooverInfo
 		const $div = $('<div class="js-hoover-info">');
 
 		$div.css({
-			'position': 'absolute',
-			'background': '#fff',
-			'padding': '5px',
-			'border': '1px solid black',
-			'border-radius': '3px',
 			'top': this.mouseY + 20,
-			'left': this.mouseX + 20,
-			'z-index': 1000
+			'left': this.mouseX + 20
+		})
+		.html(container);
+
+		$('body').prepend($div);
+
+		return container;
+	}
+
+	/**
+	 * Render attributes info box
+	 */
+	renderAttributesInfoBox(html, fromCache)
+	{
+		let container;
+
+		if (fromCache) {
+			container = html;
+		}
+		else {
+			container = $(html).find('.container');
+			// Rremove go back link
+			container.find('td').each(function(){
+				if ($(this).html() === '0') {
+					$(this).parents('tr').remove();
+				}
+			});
+			container = container.html();
+		}
+
+		const $div = $('<div class="js-hoover-info">');
+
+		$div.css({
+			'top': this.mouseY + 20,
+			'left': this.mouseX + 20
 		})
 		.html(container);
 
