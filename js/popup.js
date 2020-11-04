@@ -21,7 +21,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	const elements = document.getElementsByClassName('js-set-config');
 
 	for (let i = 0; i < elements.length; i++) {
-		if (data.edraniaConfig[elements[i].name]) {
+		if (edraniaConfig[elements[i].name]) {
 			elements[i].checked = true;
 		}
 
