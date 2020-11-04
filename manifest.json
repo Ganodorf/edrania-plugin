@@ -4,7 +4,7 @@
 	"description": "Edrania plugin.",
 	"manifest_version": 2,
 	"permissions": [
-		"activeTab"
+		"storage"
 	],
 	"content_scripts": [
 		{
@@ -24,6 +24,8 @@
 				"/css/edrania.css"
 			]
 		}
-	]
-
+	],
+	"browser_action": {
+		"default_popup": "popup.html"
+	}
 }

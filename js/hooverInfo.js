@@ -39,10 +39,10 @@ class HooverInfo
 		let type = '';
 
 		// Check if link match weapon
-		if (href.search('/Vendor/Display/') > -1) {
+		if (href.search('/Vendor/Display/') > -1 && edraniaConfig.hooverWeaponsActive) {
 			type = 'weapon';			
 		}
-		else if (href === '/MyGlad/Profile/Attributes') {
+		else if (href === '/MyGlad/Profile/Attributes' && edraniaConfig.hooverAttributesActive) {
 			type = 'attributes';
 		}
 

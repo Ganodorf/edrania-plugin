@@ -6,23 +6,30 @@ function getPlayerLevel() {
 	return parseInt($('#gladStatus table tbody tr:nth(1) td').text());
 }
 
-prefillClass = new Prefill();
+chrome.storage.sync.get('edraniaConfig', function(data){
+	edraniaConfig = data.edraniaConfig;
+	if (edraniaConfig === undefined) {
+		edraniaConfig = {};
+	}
 
-// Init hoover info for links
-new HooverInfo();
+	prefillClass = new Prefill();
 
-if (location.pathname === '/Auction') {
-	new Auction();
-}
-else if (location.pathname === '/TeamGame/') {
-	new TeamGame('list');
-}
-else if (location.pathname === '/TeamGame/Create') {
-	new TeamGame('create');
-}
-else if (location.pathname.search('/MyGlad/Challenges/In') > -1) {
-	new Challenges('incoming');
-}
-else if (location.pathname.search('/MyGlad/Challenges/Out') > -1) {
-	new Challenges('outgoing');
-}
+	// Init hoover info for links
+	new HooverInfo();
+
+	if (location.pathname === '/Auction') {
+		new Auction();
+	}
+	else if (location.pathname === '/TeamGame/') {
+		new TeamGame('list');
+	}
+	else if (location.pathname === '/TeamGame/Create') {
+		new TeamGame('create');
+	}
+	else if (location.pathname.search('/MyGlad/Challenges/In') > -1) {
+		new Challenges('incoming');
+	}
+	else if (location.pathname.search('/MyGlad/Challenges/Out') > -1) {
+		new Challenges('outgoing');
+	}
+});
