@@ -4,7 +4,7 @@
 	"description": "Edrania plugin.",
 	"manifest_version": 2,
 	"permissions": [
-		"activeTab"
+		"storage"
 	],
 	"content_scripts": [
 		{
@@ -14,6 +14,7 @@
 			"js": [
 				"/js/vendor/jquery-3.5.1.min.js",
 				"/js/prefill.js",
+				"/js/hooverInfo.js",
 				"/js/auction.js",
 				"/js/teamGame.js",
 				"/js/challenges.js",
@@ -23,6 +24,8 @@
 				"/css/edrania.css"
 			]
 		}
-	]
-
+	],
+	"browser_action": {
+		"default_popup": "popup.html"
+	}
 }
