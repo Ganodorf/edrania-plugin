@@ -9,11 +9,11 @@ class HooverInfo
 		// Init hoover
 		$('a').on('mouseenter', (event) => {this.hoover(event)})
 			.on('mouseleave', function(event){
-				$('.js-hoover-info').remove();
+				$('.chrome-plugin-info-box').remove();
 			})
 			.on('mousemove', function(event){
 				// Update position of info box
-				$('.js-hoover-info').css({
+				$('.chrome-plugin-info-box').css({
 					'top': event.pageY + 20,
 					'left': event.pageX + 20,
 				});
@@ -73,6 +73,22 @@ class HooverInfo
 	}
 
 	/**
+	 * Render the box
+	 */
+	renderBox(content)
+	{
+		const $div = $('<div class="chrome-plugin-info-box">');
+
+		$div.css({
+			'top': this.mouseY + 20,
+			'left': this.mouseX + 20
+		})
+		.html(content);
+
+		$('body').prepend($div);
+	}
+
+	/**
 	 * Render weapon info box
 	 */
 	renderWeaponInfoBox(html, fromCache)
@@ -89,15 +105,7 @@ class HooverInfo
 			container = container.html();
 		}
 
-		const $div = $('<div class="js-hoover-info">');
-
-		$div.css({
-			'top': this.mouseY + 20,
-			'left': this.mouseX + 20
-		})
-		.html(container);
-
-		$('body').prepend($div);
+		this.renderBox(container);
 
 		return container;
 	}
@@ -123,15 +131,7 @@ class HooverInfo
 			container = container.html();
 		}
 
-		const $div = $('<div class="js-hoover-info">');
-
-		$div.css({
-			'top': this.mouseY + 20,
-			'left': this.mouseX + 20
-		})
-		.html(container);
-
-		$('body').prepend($div);
+		this.renderBox(container);
 
 		return container;
 	}
