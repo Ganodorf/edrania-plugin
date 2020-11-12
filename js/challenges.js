@@ -31,6 +31,7 @@ class Challenges
 			// Find title for challengers and add them to the table
 			const $a = $tr.find('td:first a');
 			const title = $a.attr('title');
+			$a.attr('title', '');
 
 			$a.after('<span class="chrome-plugin-challenger">(' + title + ')</span>');
 
