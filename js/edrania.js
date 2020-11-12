@@ -32,8 +32,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 
 	prefillClass = new Prefill();
 
-	// Init hoover info for links
-	new HooverInfo();
+	// Init hover info for links
+	new HoverInfo();
 
 	if (location.pathname === '/Auction') {
 		new Auction();
