@@ -2,13 +2,33 @@ class HoverInfo
 {
 	constructor()
 	{
-		// Cache info to avoid 
+		// Cache info to avoid loading the same content twice
 		this.cache = [];
-		this.isLoading = false;
+		this.ajaxRequest = null;
+		this.playerItemsRequest = null;
+		this.playerStatisticsRequest = null;
+		this.hoverTimeout = null;
 
 		// Init hover
-		$('a').on('mouseenter', (event) => {this.hover(event)})
-			.on('mouseleave', function(event){
+		$('a').on('mouseenter', (event) => {
+				// Wait 100 ms in case of user is hovering on multiple links in a short time
+				this.hoverTimeout = setTimeout(() => {
+					this.hover(event);
+				}, 100);
+			})
+			.on('mouseleave', (event) => {
+				clearTimeout(this.hoverTimeout);
+
+				if (this.ajaxRequest !== null) {
+					this.ajaxRequest.abort();
+				}
+				if (this.playerItemsRequest !== null) {
+					this.playerItemsRequest.abort();
+				}
+				if (this.playerStatisticsRequest !== null) {
+					this.playerStatisticsRequest.abort();
+				}
+				
 				$('.chrome-plugin-info-box').remove();
 			})
 			.on('mousemove', (event) => {
@@ -24,11 +44,6 @@ class HoverInfo
 	 */
 	hover(event)
 	{
-		// Avoid fetching multiple pages on the same time
-		if (this.isLoading) {
-			return false;
-		}
-
 		this.mouseX = event.pageX;
 		this.mouseY = event.pageY;
 
@@ -62,22 +77,28 @@ class HoverInfo
 				this.renderAttributesInfoBox(this.cache[cacheHref], true);
 			}
 			else if (type === 'player') {
-				this.renderPlayerInfoBox(this.cache[cacheHref], true);
+				this.renderPlayerInfoBox(this.cache[cacheHref], '', true);
 			}
 		}
+		else if (type === 'player') {
+			this.playerItemsRequest = $.get(href);
+			this.playerStatisticsRequest = $.get(cacheHref + '/Stats');
+
+			$.when(this.playerItemsRequest, this.playerStatisticsRequest).then((a1, a2) => {
+				const itemsHtml = a1[0];
+				const statisticsHtml = a2[0];
+
+				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, false);
+			});
+		}
 		else {
-			this.isLoading = true;
-			$.get(href, (html) => {
+			this.ajaxRequest = $.get(href, (html) => {
 				if (type === 'weapon') {
 					this.cache[cacheHref] = this.renderWeaponInfoBox(html, false);
 				}
 				else if (type === 'attributes') {
 					this.cache[cacheHref] = this.renderAttributesInfoBox(html, false);
 				}
-				else if (type === 'player') {
-					this.cache[cacheHref] = this.renderPlayerInfoBox(html, false);
-				}
-				this.isLoading = false;
 			});
 		}
 	}
@@ -167,16 +188,17 @@ class HoverInfo
 	/**
 	 * Render info about a player equipment
 	 */
-	renderPlayerInfoBox(html, fromCache)
+	renderPlayerInfoBox(itemsHtml, statisticsHtml, fromCache)
 	{
 		let container;
 
 		if (fromCache) {
-			container = html;
+			container = itemsHtml;
 		}
 		else {
-			container = $(html).find('.indent-2');
-			//container = container.html();
+			const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
+			container = $(itemsHtml).find('.indent-2');			
+			container.append('<br><br><b style="margin-left: 15px;">Högsta skada:</b>&nbsp;' + hardestHit);
 		}
 
 		this.renderBox(container);

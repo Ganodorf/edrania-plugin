@@ -35,19 +35,25 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init hover info for links
 	new HoverInfo();
 
-	if (location.pathname === '/Auction') {
+	let path = location.pathname;
+	// Add trailing slash to path if missing
+	if (path.slice(-1) !== '/') {
+		path += '/';
+	}
+
+	if (path === '/Auction/') {
 		new Auction();
 	}
-	else if (location.pathname === '/TeamGame/') {
+	else if (path === '/TeamGame/') {
 		new TeamGame('list');
 	}
-	else if (location.pathname === '/TeamGame/Create') {
+	else if (path === '/TeamGame/Create/') {
 		new TeamGame('create');
 	}
-	else if (location.pathname.search('/MyGlad/Challenges/In') > -1) {
+	else if (path.search('/MyGlad/Challenges/In/') > -1) {
 		new Challenges('incoming');
 	}
-	else if (location.pathname.search('/MyGlad/Challenges/Out') > -1) {
+	else if (path.search('/MyGlad/Challenges/Out/') > -1) {
 		new Challenges('outgoing');
 	}
 });
