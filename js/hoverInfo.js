@@ -181,7 +181,6 @@ class HoverInfo
 		}
 		else {
 			container = $(html).find('.indent-2');
-			//container = container.html();
 		}
 
 		this.renderBox(container);
