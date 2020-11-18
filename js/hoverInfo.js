@@ -4,11 +4,23 @@ class HoverInfo
 	{
 		// Cache info to avoid 
 		this.cache = [];
-		this.isLoading = false;
+		this.ajaxRequest = null;
+		this.hoverTimeout = null;
 
 		// Init hover
-		$('a').on('mouseenter', (event) => {this.hover(event)})
-			.on('mouseleave', function(event){
+		$('a').on('mouseenter', (event) => {
+				// Wait 100 ms in case of user is hovering on multiple links in a short time
+				this.hoverTimeout = setTimeout(() => {
+					this.hover(event);
+				}, 100);
+			})
+			.on('mouseleave', (event) => {
+				clearTimeout(this.hoverTimeout);
+
+				if (this.ajaxRequest !== null) {
+					this.ajaxRequest.abort();
+				}
+				
 				$('.chrome-plugin-info-box').remove();
 			})
 			.on('mousemove', (event) => {
@@ -24,11 +36,6 @@ class HoverInfo
 	 */
 	hover(event)
 	{
-		// Avoid fetching multiple pages on the same time
-		if (this.isLoading) {
-			return false;
-		}
-
 		this.mouseX = event.pageX;
 		this.mouseY = event.pageY;
 
@@ -66,8 +73,7 @@ class HoverInfo
 			}
 		}
 		else {
-			this.isLoading = true;
-			$.get(href, (html) => {
+			this.ajaxRequest = $.get(href, (html) => {
 				if (type === 'weapon') {
 					this.cache[cacheHref] = this.renderWeaponInfoBox(html, false);
 				}
@@ -77,7 +83,6 @@ class HoverInfo
 				else if (type === 'player') {
 					this.cache[cacheHref] = this.renderPlayerInfoBox(html, false);
 				}
-				this.isLoading = false;
 			});
 		}
 	}
