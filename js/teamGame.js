@@ -27,7 +27,7 @@ class TeamGame
 		const $label = $('<label>');
 		$label.append($input).append(' Visa bara för din grad');
 
-		$('.compact-table').before($label);
+		$('.compact-table:first').before($label);
 	}
 
 	/**
@@ -41,7 +41,7 @@ class TeamGame
 			switch ($input.attr('name')) {
 				case 'hideOutOfLevel':
 					if ($input.is(':checked')) {
-						$('.compact-table tbody tr').each(function(){
+						$('.compact-table:first tbody tr').each(function(){
 							const $tr = $(this);
 
 							const levels = $tr.find('td:nth(2)').text().split(' - ');
@@ -56,7 +56,7 @@ class TeamGame
 						});
 					}
 					else {
-						$('.compact-table tbody tr').show();
+						$('.compact-table:first tbody tr').show();
 					}
 					break;
 			}
