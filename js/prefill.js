@@ -50,7 +50,7 @@ class Prefill
 				return;
 			}
 
-			if ($input.is(':checkbox')) {
+			if ($input.is(':checkbox') && !$input.is('#HideProperties')) {
 				if (value) {
 					$input.trigger('click');
 				}
