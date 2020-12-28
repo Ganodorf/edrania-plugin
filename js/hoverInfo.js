@@ -150,7 +150,7 @@ class HoverInfo
 		else {
 			container = $(html).find('.container');
 			// Remove things we dont want to show
-			container.find('.nav-arrow, .description, br:first, br:last').remove();
+			container.find('.nav-arrow, .description, br:first, br:last, img').remove();
 			container = container.html();
 		}
 
