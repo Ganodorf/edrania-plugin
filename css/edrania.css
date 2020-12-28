@@ -25,3 +25,7 @@
 	border-radius: 3px;
 	z-index: 1000;
 }
+
+.chrome-plugin-tiny-text {
+	font-size: 10px;
+}

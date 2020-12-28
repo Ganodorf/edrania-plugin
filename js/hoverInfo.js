@@ -128,7 +128,7 @@ class HoverInfo
 
 		if (this.mouseY + $div.height() + 20 > window.innerHeight) {
 			top = this.mouseY - $div.height() - 20;
-			left = this.mouseX - $div.height() - 20;
+			left = this.mouseX - $div.width() - 20;
 		}
 
 		$div.css({
@@ -150,7 +150,7 @@ class HoverInfo
 		else {
 			container = $(html).find('.container');
 			// Remove things we dont want to show
-			container.find('.nav-arrow, .description, br:first, br:last').remove();
+			container.find('.nav-arrow, .description, br:first, br:last, img').remove();
 			container = container.html();
 		}
 

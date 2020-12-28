@@ -16,6 +16,22 @@ function getPlayerMaxHP() {
 	return parseInt(hpArr[1]);
 }
 
+/**
+ * Get players time
+ * @return {int}
+ */
+function getPlayerTime() {
+	return parseInt($('#gladStatus table tbody tr:nth(3) td').text());
+}
+
+/**
+ * Get players name
+ * @return {string}
+ */
+function getPlayerName() {
+	return $('#gladStatus p:first').text();
+}
+
 // Display how much hp each threshold is
 const playerHP = getPlayerMaxHP();
 $('select[name=RetreatThreshold] option').each(function(){
@@ -35,6 +51,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init hover info for links
 	new HoverInfo();
 
+	// Init quick shop for tavern
+	new Tavern();
+
 	let path = location.pathname;
 	// Add trailing slash to path if missing
 	if (path.slice(-1) !== '/') {
@@ -50,10 +69,27 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path === '/TeamGame/Create/') {
 		new TeamGame('create');
 	}
+	else if (path.search('/TeamGame/View/') > -1) {
+		new TeamGame('view');
+	}
 	else if (path.search('/MyGlad/Challenges/In/') > -1) {
 		new Challenges('incoming');
 	}
 	else if (path.search('/MyGlad/Challenges/Out/') > -1) {
 		new Challenges('outgoing');
+	}
+	else if (path === '/Work/') {
+		// Set highest possible time player can work
+		const $select = $('select[name=Time]');
+		const playerTime = getPlayerTime();
+
+		$select.find('option').each(function(){
+			const time = $(this).val();
+			if (time <= playerTime) {
+				$select.val(time).trigger('change');
+				return true;
+			}
+			return false;
+		});
 	}
 });
