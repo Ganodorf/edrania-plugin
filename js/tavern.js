@@ -4,7 +4,7 @@ class Tavern
 	{
 		// Create quick shop
 		const $quickShop = $('<div>');
-		$quickShop.append('<b>Snabbmat <span class="chrome-plugin-tiny-text">(OBS köper direkt)</span></b><br>');
+		$quickShop.append('<b>Snabbmat <span class="chrome-plugin-tiny-text">(köper direkt)</span></b><br>');
 
 		$quickShop.append('<a class="js-tavern-buy black" href="#" data-action="/Tavern/Purchase/1/">Äpple 5sm (5hp)</a><br>');
 

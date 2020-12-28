@@ -24,6 +24,14 @@ function getPlayerTime() {
 	return parseInt($('#gladStatus table tbody tr:nth(3) td').text());
 }
 
+/**
+ * Get players name
+ * @return {string}
+ */
+function getPlayerName() {
+	return $('#gladStatus p:first').text();
+}
+
 // Display how much hp each threshold is
 const playerHP = getPlayerMaxHP();
 $('select[name=RetreatThreshold] option').each(function(){
@@ -60,6 +68,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	}
 	else if (path === '/TeamGame/Create/') {
 		new TeamGame('create');
+	}
+	else if (path.search('/TeamGame/View/') > -1) {
+		new TeamGame('view');
 	}
 	else if (path.search('/MyGlad/Challenges/In/') > -1) {
 		new Challenges('incoming');

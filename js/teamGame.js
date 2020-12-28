@@ -4,13 +4,22 @@ class TeamGame
 	{
 		switch (action) {
 			case 'create':
+				this.initPrefill();
 				break;
 
 			case 'list':
-				this.setupFilter();		
+				this.setupFilter();
+				this.initPrefill();
+				break;
+
+			case 'view':
+				this.setupViewGame();
 				break;
 		}
+	}
 
+	initPrefill()
+	{
 		$('input, select').on('change', (event) => {prefillClass.savePrefill('teamGamePrefill', event)});
 		prefillClass.prefillInputs('teamGamePrefill');
 	}
@@ -61,5 +70,50 @@ class TeamGame
 					break;
 			}
 		});
+	}
+
+	/**
+	 * Setup stuff for view game
+	 */
+	setupViewGame()
+	{
+		if (!this.isPlayerInGame()) {
+			return false;
+		}
+
+		// Set auto ready?
+		if (edraniaConfig.teamGameAutoReady) {
+			this.setPlayerReady();
+		}
+	}
+
+	/**
+	 * Check if player is in the game
+	 * @return {bool}
+	 */
+	isPlayerInGame()
+	{
+		const gameID = location.pathname.split('/')[3];
+		if ($('a[href="/TeamGame/' + gameID + '/ToggleReadyState"]').length > 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if player is ready and if not set player as ready
+	 */
+	setPlayerReady()
+	{
+		const gameID = location.pathname.split('/')[3];
+		const toggleURL = '/TeamGame/' + gameID + '/ToggleReadyState';
+		const readyState = $('a[href="' + toggleURL + '"]').text();
+
+		if (readyState !== 'Redo' && readyState !== 'Ready') {
+			$.get(toggleURL, () => {
+				$('a[href="' + toggleURL + '"]').text('Redo');
+			});
+		}
 	}
 }
