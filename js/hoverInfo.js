@@ -128,7 +128,7 @@ class HoverInfo
 
 		if (this.mouseY + $div.height() + 20 > window.innerHeight) {
 			top = this.mouseY - $div.height() - 20;
-			left = this.mouseX - $div.height() - 20;
+			left = this.mouseX - $div.width() - 20;
 		}
 
 		$div.css({
