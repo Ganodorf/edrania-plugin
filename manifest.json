@@ -18,6 +18,7 @@
 				"/js/auction.js",
 				"/js/teamGame.js",
 				"/js/challenges.js",
+				"/js/tavern.js",
 				"/js/edrania.js"
 			],
 			"css": [

@@ -43,6 +43,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init hover info for links
 	new HoverInfo();
 
+	// Init quick shop for tavern
+	new Tavern();
+
 	let path = location.pathname;
 	// Add trailing slash to path if missing
 	if (path.slice(-1) !== '/') {
