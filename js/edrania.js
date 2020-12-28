@@ -73,8 +73,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			const time = $(this).val();
 			if (time <= playerTime) {
 				$select.val(time).trigger('change');
-				return false;
+				return true;
 			}
+			return false;
 		});
 	}
 });
