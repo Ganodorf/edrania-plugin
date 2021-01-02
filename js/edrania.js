@@ -54,6 +54,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init quick shop for tavern
 	new Tavern();
 
+	const auction = new Auction();
+
 	let path = location.pathname;
 	// Add trailing slash to path if missing
 	if (path.slice(-1) !== '/') {
@@ -61,7 +63,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	}
 
 	if (path === '/Auction/') {
-		new Auction();
+		auction.setupSearch();
 	}
 	else if (path === '/TeamGame/') {
 		new TeamGame('list');

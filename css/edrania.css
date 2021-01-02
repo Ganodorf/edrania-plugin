@@ -29,3 +29,18 @@
 .chrome-plugin-tiny-text {
 	font-size: 10px;
 }
+
+.chrome-plugin-banner {
+	height: 30px;
+	background: green;
+	margin: 0 auto;
+}
+
+.chrome-plugin-my-auctions {
+	/*position: absolute;
+	padding: 5px;
+	background: #C1AF97;
+	border: 1px solid #000;
+	border-radius: 3px;
+	z-index: 1000;*/
+}
