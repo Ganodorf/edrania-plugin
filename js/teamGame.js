@@ -4,7 +4,6 @@ class TeamGame
 	{
 		switch (action) {
 			case 'create':
-				this.initPrefill();
 				break;
 
 			case 'list':

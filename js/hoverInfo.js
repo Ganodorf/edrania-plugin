@@ -10,33 +10,41 @@ class HoverInfo
 		this.hoverTimeout = null;
 
 		// Init hover
-		$('a').on('mouseenter', (event) => {
-				// Wait 100 ms in case of user is hovering on multiple links in a short time
-				this.hoverTimeout = setTimeout(() => {
-					this.hover(event);
-				}, 100);
-			})
-			.on('mouseleave', (event) => {
-				clearTimeout(this.hoverTimeout);
+		this.initHover();
+	}
 
-				if (this.ajaxRequest !== null) {
-					this.ajaxRequest.abort();
-				}
-				if (this.playerItemsRequest !== null) {
-					this.playerItemsRequest.abort();
-				}
-				if (this.playerStatisticsRequest !== null) {
-					this.playerStatisticsRequest.abort();
-				}
-				
-				$('.chrome-plugin-info-box').remove();
-			})
-			.on('mousemove', (event) => {
-				// Update position of info box
-				this.mouseX = event.pageX;
-				this.mouseY = event.pageY;
-				this.setBoxPosition();
-			});
+	/**
+	 * Init hover listener
+	 */
+	initHover()
+	{
+		$('a').off('mouseenter').on('mouseenter', (event) => {
+			// Wait 100 ms in case of user is hovering on multiple links in a short time
+			this.hoverTimeout = setTimeout(() => {
+				this.hover(event);
+			}, 100);
+		})
+		.on('mouseleave', (event) => {
+			clearTimeout(this.hoverTimeout);
+
+			if (this.ajaxRequest !== null) {
+				this.ajaxRequest.abort();
+			}
+			if (this.playerItemsRequest !== null) {
+				this.playerItemsRequest.abort();
+			}
+			if (this.playerStatisticsRequest !== null) {
+				this.playerStatisticsRequest.abort();
+			}
+			
+			$('.chrome-plugin-info-box').remove();
+		})
+		.on('mousemove', (event) => {
+			// Update position of info box
+			this.mouseX = event.pageX;
+			this.mouseY = event.pageY;
+			this.setBoxPosition();
+		});
 	}
 
 	/**

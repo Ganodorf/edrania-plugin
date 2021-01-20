@@ -11,72 +11,40 @@ class Challenges
 				// Nothing here yet
 				break;
 		}
-		
 	}
 
 	/**
-	 * Setup incoming page
+	 * Init incoming page event listeners
 	 */
 	initIncoming()
 	{
-		// Add check all to thead
-		$('.compact-table thead tr').prepend('<td width="20"><input class="js-check-all" type="checkbox"></td>');
-		$('.js-check-all').on('change', function(){
-			$('.compact-table tbody input[type=checkbox]').prop('checked', $(this).is(':checked'));
-		});
+		// Create observer for changes on incoming table
+		const $table = $('.compact-table')[0];
+		const config = {
+			childList: true,
+			subtree: true
+		};
 
-		$('.compact-table tbody tr').each(function(index, el){
-			const $tr = $(this);
+		const observer = new MutationObserver(this.setupIncoming);
+		observer.observe($table, config);
 
-			// Find title for challengers and add them to the table
-			const $a = $tr.find('td:first a');
-			const title = $a.attr('title');
-			$a.attr('title', '');
-
-			$a.after('<span class="chrome-plugin-challenger">(' + title + ')</span>');
-
-			// Add checkbox for multi cancel
-			const $td = $tr.find('td:nth(3)');
-			const cancelURL = $td.find('form').attr('action');
-			const requestToken = $td.find('form input[name="__RequestVerificationToken"]').val();
-
-			$tr.prepend('<td><input class="js-cancel-challenge" type="checkbox" value="' + cancelURL + '" data-token="' + requestToken + '"></td>');
-		});
-
-		// Add button for remove
-		const $a = $('<a class="chrome-plugin-btn" href="#">Neka checkade</a>');
-		$a.on('click', (event) => {this.deleteIncomingChallenges(event)});
-
-		$('.compact-table').before($a);
+		this.setupIncoming();
 	}
 
 	/**
-	 * Delete incoming challenges
+	 * Actually setup incoming page
 	 */
-	deleteIncomingChallenges(event)
+	setupIncoming()
 	{
-		event.preventDefault();
+		// We have to reset hover listeners for gladiator links in case of list has been reloaded by level filter
+		hoverInfo.initHover();
 
-		if (!confirm('Är du säker?')) {
-			return false;
-		}
-
-		const numChecked = $('.js-cancel-challenge:checked').length;
-
-		$('.js-cancel-challenge:checked').each(function(index, el){
-			const url = $(this).val();
-			const data = {
-				__RequestVerificationToken: $(this).data('token')
-			};
-
-			$.post(url, data, () => {
-				$(this).parents('tr').remove();
-
-				// Reload when all is done to load new challengers
-				if (index + 1 === numChecked) {
-					location.reload();
-				}
-			});
+		// Remove title for challengers
+		$('.compact-table tbody tr').each(function(index, el){
+			const $tr = $(this);
+			
+			const $a = $tr.find('td:nth(1) a');
+			$a.attr('title', '');
 		});
 	}
 }

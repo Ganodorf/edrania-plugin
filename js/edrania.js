@@ -49,7 +49,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	prefillClass = new Prefill();
 
 	// Init hover info for links
-	new HoverInfo();
+	hoverInfo = new HoverInfo();
 
 	// Init quick shop for tavern
 	new Tavern();
@@ -77,19 +77,5 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	}
 	else if (path.search('/MyGlad/Challenges/Out/') > -1) {
 		new Challenges('outgoing');
-	}
-	else if (path === '/Work/') {
-		// Set highest possible time player can work
-		const $select = $('select[name=Time]');
-		const playerTime = getPlayerTime();
-
-		$select.find('option').each(function(){
-			const time = $(this).val();
-			if (time <= playerTime) {
-				$select.val(time).trigger('change');
-				return true;
-			}
-			return false;
-		});
 	}
 });
