@@ -82,15 +82,7 @@ class HoverInfo
 		}
 
 		if (this.cache[cacheHref] !== undefined) {
-			if (type === 'weapon') {
-				this.renderWeaponInfoBox(this.cache[cacheHref], true);
-			}
-			else if (type === 'attributes') {
-				this.renderAttributesInfoBox(this.cache[cacheHref], true);
-			}
-			else if (type === 'player') {
-				this.renderPlayerInfoBox(this.cache[cacheHref], '', '', true);
-			}
+			this.renderBox(this.cache[cacheHref]);
 		}
 		else if (type === 'player') {
 			this.playerItemsRequest = $.get(href);
@@ -102,16 +94,16 @@ class HoverInfo
 				const statisticsHtml = a2[0];
 				const profileHtml = a3[0];
 
-				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml, false);
+				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml);
 			});
 		}
 		else {
 			this.ajaxRequest = $.get(href, (html) => {
 				if (type === 'weapon') {
-					this.cache[cacheHref] = this.renderWeaponInfoBox(html, false);
+					this.cache[cacheHref] = this.renderWeaponInfoBox(html);
 				}
 				else if (type === 'attributes') {
-					this.cache[cacheHref] = this.renderAttributesInfoBox(html, false);
+					this.cache[cacheHref] = this.renderAttributesInfoBox(html);
 				}
 			});
 		}
@@ -154,19 +146,13 @@ class HoverInfo
 	/**
 	 * Render weapon info box
 	 */
-	renderWeaponInfoBox(html, fromCache)
+	renderWeaponInfoBox(html)
 	{
-		let container;
+		let container = $(html).find('.container');
 
-		if (fromCache) {
-			container = html;
-		}
-		else {
-			container = $(html).find('.container');
-			// Remove things we dont want to show
-			container.find('.nav-arrow, .description, br:first, br:last, img').remove();
-			container = container.html();
-		}
+		// Remove things we dont want to show
+		container.find('.nav-arrow, .description, br:first, br:last, img').remove();
+		container = container.html();
 
 		this.renderBox(container);
 
@@ -176,23 +162,16 @@ class HoverInfo
 	/**
 	 * Render attributes info box
 	 */
-	renderAttributesInfoBox(html, fromCache)
+	renderAttributesInfoBox(html)
 	{
-		let container;
-
-		if (fromCache) {
-			container = html;
-		}
-		else {
-			container = $(html).find('.container');
-			// Remove go back link
-			container.find('td').each(function(){
-				if ($(this).html() === '0') {
-					$(this).parents('tr').remove();
-				}
-			});
-			container = container.html();
-		}
+		let container = $(html).find('.container');
+		// Remove go back link
+		container.find('td').each(function(){
+			if ($(this).html() === '0') {
+				$(this).parents('tr').remove();
+			}
+		});
+		container = container.html();
 
 		this.renderBox(container);
 
@@ -202,22 +181,15 @@ class HoverInfo
 	/**
 	 * Render info about a player equipment
 	 */
-	renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml, fromCache)
+	renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml)
 	{
-		let container;
-
-		if (fromCache) {
-			container = itemsHtml;
-		}
-		else {
-			const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
-			const race = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(3) td').html();
-			container = $(itemsHtml).find('.indent-2');
-			container.append(
-				'<br><br><b style="margin-left: 15px;">Högsta skada:</b>&nbsp;' 
-				+ hardestHit 
-				+ '<br><br><b style="margin-left: 15px;">Ras:</b>&nbsp;' + race);
-		}
+		const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
+		const race = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(3) td').html();
+		const container = $(itemsHtml).find('.indent-2');
+		container.append(
+			'<br><br><b style="margin-left: 15px;">Högsta skada:</b>&nbsp;' 
+			+ hardestHit 
+			+ '<br><br><b style="margin-left: 15px;">Ras:</b>&nbsp;' + race);
 
 		this.renderBox(container);
 
