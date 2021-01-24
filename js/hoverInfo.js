@@ -7,6 +7,7 @@ class HoverInfo
 		this.ajaxRequest = null;
 		this.playerItemsRequest = null;
 		this.playerStatisticsRequest = null;
+		this.playerProfileRequest = null;
 		this.hoverTimeout = null;
 
 		// Init hover
@@ -35,6 +36,9 @@ class HoverInfo
 			}
 			if (this.playerStatisticsRequest !== null) {
 				this.playerStatisticsRequest.abort();
+			}
+			if (this.playerProfileRequest !== null) {
+				this.playerProfileRequest.abort();
 			}
 			
 			$('.chrome-plugin-info-box').remove();
@@ -85,18 +89,20 @@ class HoverInfo
 				this.renderAttributesInfoBox(this.cache[cacheHref], true);
 			}
 			else if (type === 'player') {
-				this.renderPlayerInfoBox(this.cache[cacheHref], '', true);
+				this.renderPlayerInfoBox(this.cache[cacheHref], '', '', true);
 			}
 		}
 		else if (type === 'player') {
 			this.playerItemsRequest = $.get(href);
 			this.playerStatisticsRequest = $.get(cacheHref + '/Stats');
+			this.playerProfileRequest = $.get(cacheHref);
 
-			$.when(this.playerItemsRequest, this.playerStatisticsRequest).then((a1, a2) => {
+			$.when(this.playerItemsRequest, this.playerStatisticsRequest, this.playerProfileRequest).then((a1, a2, a3) => {
 				const itemsHtml = a1[0];
 				const statisticsHtml = a2[0];
+				const profileHtml = a3[0];
 
-				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, false);
+				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml, false);
 			});
 		}
 		else {
@@ -179,7 +185,7 @@ class HoverInfo
 		}
 		else {
 			container = $(html).find('.container');
-			// Rremove go back link
+			// Remove go back link
 			container.find('td').each(function(){
 				if ($(this).html() === '0') {
 					$(this).parents('tr').remove();
@@ -196,7 +202,7 @@ class HoverInfo
 	/**
 	 * Render info about a player equipment
 	 */
-	renderPlayerInfoBox(itemsHtml, statisticsHtml, fromCache)
+	renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml, fromCache)
 	{
 		let container;
 
@@ -205,8 +211,12 @@ class HoverInfo
 		}
 		else {
 			const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
-			container = $(itemsHtml).find('.indent-2');			
-			container.append('<br><br><b style="margin-left: 15px;">Högsta skada:</b>&nbsp;' + hardestHit);
+			const race = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(3) td').html();
+			container = $(itemsHtml).find('.indent-2');
+			container.append(
+				'<br><br><b style="margin-left: 15px;">Högsta skada:</b>&nbsp;' 
+				+ hardestHit 
+				+ '<br><br><b style="margin-left: 15px;">Ras:</b>&nbsp;' + race);
 		}
 
 		this.renderBox(container);
