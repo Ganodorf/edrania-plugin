@@ -2,32 +2,19 @@ class Auction
 {
 	constructor()
 	{
-		// Create new elements
-		const $input = $('<input>');
-		$input.attr('placeholder', 'Sök...');
-		$input.on('keyup', (event) => {this.search(event)});
-
-		$('.compact-table').before($input);
+		this.initSearchPage();
 	}
 
-	/**
-	 * Filter auctions table
-	 */
-	search()
+	initSearchPage()
 	{
-		const $input = $(event.currentTarget);
-		const value = $input.val();
+		// Create observer for changes on incoming table
+		const $table = $('#auctionTblBody')[0];
+		const config = {
+			childList: true,
+			subtree: true
+		};
 
-		$('.compact-table tbody tr').each(function(){
-			const $tr = $(this);
-
-			const name = $tr.find('td:first a').text();
-			if (name.search(new RegExp(value, 'i')) === -1) {
-				$tr.hide();
-			}
-			else {
-				$tr.show();
-			}
-		});
+		const observer = new MutationObserver(function(){hoverInfo.initHover()});
+		observer.observe($table, config);
 	}
 }
