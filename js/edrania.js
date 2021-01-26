@@ -78,4 +78,20 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path.search('/MyGlad/Challenges/Out/') > -1) {
 		new Challenges('outgoing');
 	}
+	else if (path.search('/MyGlad/Profile/Biography/Edit/') > -1) {
+		const regex = /(?<=\[plugin\])[\w\W]*(?=\[\/plugin\])/g;
+		const matches = $('.container').find('textarea').val().match(regex);
+
+		let text = '';
+		if (matches !== null) {
+			text = matches[0].replaceAll(/[<>]*/g, '').substr(0, 200);
+		}
+
+		$('.container').after('<div class="chrome-plugin-alert"><b>Plugin:</b><br>' 
+			+ 'Du kan lägga till text i din biografi som du vill visa när någon hovrar över din gladiator.<br>'
+			+ 'Du gör detta genom att lägga till <b>[plugin]Text som ska visas[/plugin]</b> i din biografi.<br>'
+			+ 'Texten som visas är begränsad till 200 tecken.<br><br>'
+			+ '<b>Text som kommer att visas:</b><br>' + text
+			+'</div>');
+	}
 });

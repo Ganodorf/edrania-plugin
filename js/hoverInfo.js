@@ -185,11 +185,26 @@ class HoverInfo
 	{
 		const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
 		const race = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(3) td').html();
-		const container = $(itemsHtml).find('.indent-2');
+		const items = $(itemsHtml).find('.indent-2');
+		const container = $('<div style="width: 500px;">').append(items);
+
 		container.append(
-			'<br><br><b style="margin-left: 15px;">Högsta skada:</b>&nbsp;' 
-			+ hardestHit 
-			+ '<br><br><b style="margin-left: 15px;">Ras:</b>&nbsp;' + race);
+			'<div><b>Högsta skada:</b> ' + hardestHit + '</div>');
+
+		if (race !== undefined) {
+			container.append(
+				'<div><b>Ras:</b> ' + race + '</div>');
+		}
+
+		// Check if biography contains any plugin text
+		const biography = $(profileHtml).find('.indent-1:nth(2)').html();
+		const regex = /(?<=\[plugin\])[\w\W]*(?=\[\/plugin\])/g;
+		const matches = biography.match(regex);
+		
+		if (matches !== null) {
+			const text = matches[0].replaceAll(/[<>]*/g, '').substring(0, 200);
+			container.append('<div><b>Info:</b> ' + text + '</div>');
+		}
 
 		this.renderBox(container);
 
