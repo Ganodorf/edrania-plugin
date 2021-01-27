@@ -1,5 +1,5 @@
 .chrome-plugin-btn {
-	display: block;
+	display: inline-block;
 	padding: 2px 4px;
 	border: 1px solid #538234;
 	background: #71b346;
@@ -35,4 +35,48 @@
 	background: #9dc3e6;
 	border: 1px solid #2f5597;
 	border-radius: 3px;
+}
+
+.chrome-plugin-talent-calculator {
+	position: absolute;
+	width: 800px;
+	height: 800px;
+	top: 20px;
+	left: 25%;
+	background: #fff;
+	border-radius: 3px;
+	border: 1px solid #000;
+	box-shadow: 6px 5px 5px #555;
+	z-index: 1000;	
+}
+
+.chrome-plugin-talent-calculator__menu {
+	background: #9dc3e6;
+	border-bottom: 1px solid #000;
+}
+.chrome-plugin-talent-calculator__menu a {
+	display: inline-block;
+	padding: 5px 10px;
+	color: #000;
+}
+.chrome-plugin-talent-calculator__menu a:hover {
+	background: #2f5597;
+	color: #000;
+}
+
+.chrome-plugin-talent-calculator__main {
+	padding: 10px;
+}
+
+.mb {
+	margin-bottom: 10px;
+}
+.mt {
+	margin-top: 10px;
+}
+.mr {
+	margin-right: 10px;
+}
+.ml {
+	margin-left: 10px;
 }

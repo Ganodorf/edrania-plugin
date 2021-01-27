@@ -31,6 +31,17 @@ function getPlayerTime() {
 function getPlayerName() {
 	return $('#gladStatus p:first').text();
 }
+	
+/**
+ * Round a number to decimals
+ * @param  {float} number
+ * @param  {int}   decimals
+ * @return {float}
+ */
+function round(number, decimals)
+{
+	return parseFloat(number.toFixed(decimals));
+}
 
 // Display how much hp each threshold is
 const playerHP = getPlayerMaxHP();
@@ -53,6 +64,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 
 	// Init quick shop for tavern
 	new Tavern();
+
+	new TalentCalculator();
 
 	let path = location.pathname;
 	// Add trailing slash to path if missing
