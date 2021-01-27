@@ -29,3 +29,10 @@
 .chrome-plugin-tiny-text {
 	font-size: 10px;
 }
+
+.chrome-plugin-alert {
+	padding: 5px;
+	background: #9dc3e6;
+	border: 1px solid #2f5597;
+	border-radius: 3px;
+}

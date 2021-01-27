@@ -7,6 +7,7 @@ class HoverInfo
 		this.ajaxRequest = null;
 		this.playerItemsRequest = null;
 		this.playerStatisticsRequest = null;
+		this.playerProfileRequest = null;
 		this.hoverTimeout = null;
 
 		// Init hover
@@ -35,6 +36,9 @@ class HoverInfo
 			}
 			if (this.playerStatisticsRequest !== null) {
 				this.playerStatisticsRequest.abort();
+			}
+			if (this.playerProfileRequest !== null) {
+				this.playerProfileRequest.abort();
 			}
 			
 			$('.chrome-plugin-info-box').remove();
@@ -78,34 +82,28 @@ class HoverInfo
 		}
 
 		if (this.cache[cacheHref] !== undefined) {
-			if (type === 'weapon') {
-				this.renderWeaponInfoBox(this.cache[cacheHref], true);
-			}
-			else if (type === 'attributes') {
-				this.renderAttributesInfoBox(this.cache[cacheHref], true);
-			}
-			else if (type === 'player') {
-				this.renderPlayerInfoBox(this.cache[cacheHref], '', true);
-			}
+			this.renderBox(this.cache[cacheHref]);
 		}
 		else if (type === 'player') {
 			this.playerItemsRequest = $.get(href);
 			this.playerStatisticsRequest = $.get(cacheHref + '/Stats');
+			this.playerProfileRequest = $.get(cacheHref);
 
-			$.when(this.playerItemsRequest, this.playerStatisticsRequest).then((a1, a2) => {
+			$.when(this.playerItemsRequest, this.playerStatisticsRequest, this.playerProfileRequest).then((a1, a2, a3) => {
 				const itemsHtml = a1[0];
 				const statisticsHtml = a2[0];
+				const profileHtml = a3[0];
 
-				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, false);
+				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml);
 			});
 		}
 		else {
 			this.ajaxRequest = $.get(href, (html) => {
 				if (type === 'weapon') {
-					this.cache[cacheHref] = this.renderWeaponInfoBox(html, false);
+					this.cache[cacheHref] = this.renderWeaponInfoBox(html);
 				}
 				else if (type === 'attributes') {
-					this.cache[cacheHref] = this.renderAttributesInfoBox(html, false);
+					this.cache[cacheHref] = this.renderAttributesInfoBox(html);
 				}
 			});
 		}
@@ -148,19 +146,13 @@ class HoverInfo
 	/**
 	 * Render weapon info box
 	 */
-	renderWeaponInfoBox(html, fromCache)
+	renderWeaponInfoBox(html)
 	{
-		let container;
+		let container = $(html).find('.container');
 
-		if (fromCache) {
-			container = html;
-		}
-		else {
-			container = $(html).find('.container');
-			// Remove things we dont want to show
-			container.find('.nav-arrow, .description, br:first, br:last, img').remove();
-			container = container.html();
-		}
+		// Remove things we dont want to show
+		container.find('.nav-arrow, .description, br:first, br:last, img').remove();
+		container = container.html();
 
 		this.renderBox(container);
 
@@ -170,23 +162,16 @@ class HoverInfo
 	/**
 	 * Render attributes info box
 	 */
-	renderAttributesInfoBox(html, fromCache)
+	renderAttributesInfoBox(html)
 	{
-		let container;
-
-		if (fromCache) {
-			container = html;
-		}
-		else {
-			container = $(html).find('.container');
-			// Rremove go back link
-			container.find('td').each(function(){
-				if ($(this).html() === '0') {
-					$(this).parents('tr').remove();
-				}
-			});
-			container = container.html();
-		}
+		let container = $(html).find('.container');
+		// Remove go back link
+		container.find('td').each(function(){
+			if ($(this).html() === '0') {
+				$(this).parents('tr').remove();
+			}
+		});
+		container = container.html();
 
 		this.renderBox(container);
 
@@ -196,18 +181,33 @@ class HoverInfo
 	/**
 	 * Render info about a player equipment
 	 */
-	renderPlayerInfoBox(itemsHtml, statisticsHtml, fromCache)
+	renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml)
 	{
-		let container;
+		const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
+		const race = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(3) td').html();
+		const level = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(6) td').html();
+		const items = $(itemsHtml).find('.indent-2');
+		const container = $('<div style="width: 500px;">').append(items);
 
-		if (fromCache) {
-			container = itemsHtml;
+		container.append(
+			'<div><b>Högsta skada:</b> ' + hardestHit + '</div>');
+
+		if (race !== undefined) {
+			container.append(
+				'<div><b>Ras:</b> ' + race + ' (grad ' + level + ')</div>');			
 		}
-		else {
-			const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
-			container = $(itemsHtml).find('.indent-2');			
-			container.append('<br><br><b style="margin-left: 15px;">Högsta skada:</b>&nbsp;' + hardestHit);
-		}
+
+		// Check if biography contains any plugin text
+		const biography = $(profileHtml).find('.indent-1:nth(2)').html();
+		if (biography !== undefined) {
+			const regex = /(?<=\[plugin\])[\w\W]*(?=\[\/plugin\])/g;
+			const matches = biography.match(regex);
+			
+			if (matches !== null) {
+				const text = matches[0].replaceAll(/[<>]*/g, '').substring(0, 200);
+				container.append('<div><b>Info:</b> ' + text + '</div>');
+			}
+		}		
 
 		this.renderBox(container);
 
