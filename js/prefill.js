@@ -42,8 +42,31 @@ class Prefill
 	{
 		const prefillData = this.getPrefill(itemName);
 
+		$('select').each(function(){
+			let $select = $(this);
+
+			let value = prefillData[$select.attr('name')];
+			if (value === undefined) {
+				return;
+			}
+
+			// Make sure that the value exists in the select
+			if ($select.find('option[value="' + value + '"]').length > 0
+				|| $select.find('option:contains("' + value + '")').length > 0
+			) {
+				$select.val(value);
+				// trigger('change') does not work beacuse of framework event listeners
+				$select[0].dispatchEvent(new Event('change'));
+			}			
+		});
+
 		$('input').each(function(){
 			let $input = $(this);
+
+			// Skip hidden inputs
+			if ($input.attr('type') === 'hidden') {
+				return;
+			}
 
 			let value = prefillData[$input.attr('name')];
 			if (value === undefined) {
@@ -53,22 +76,12 @@ class Prefill
 			if ($input.is(':checkbox') && !$input.is('#HideProperties')) {
 				if (value) {
 					$input.trigger('click');
+					$input[0].dispatchEvent(new Event('change'));
 				}
 			}
 			else {
 				$input.val(value);
 			}
-		});
-
-		$('select').each(function(){
-			let $select = $(this);
-
-			let value = prefillData[$select.attr('name')];
-			if (value === undefined) {
-				return;
-			}
-
-			$select.val(value).trigger('change');
 		});
 	}
 }
