@@ -18,9 +18,9 @@ class Prefill
 	}
 
 	/**
-	 * Save to local storage
+	 * Save input prefill to local storage
 	 */
-	savePrefill(itemName, event)
+	savePrefillInputs(itemName, event)
 	{
 		const $input = $(event.currentTarget);
 		let prefillData = this.getPrefill(itemName);
@@ -33,6 +33,14 @@ class Prefill
 		}
 
 		localStorage.setItem(itemName, JSON.stringify(prefillData));
+	}
+
+	/**
+	 * Save prefill to local storage
+	 */
+	savePrefill(itemName, data)
+	{
+		localStorage.setItem(itemName, JSON.stringify(data));
 	}
 
 	/**

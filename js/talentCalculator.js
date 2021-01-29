@@ -69,7 +69,7 @@ class TalentCalculator
 	 */
 	renderStartMenu()
 	{
-		// Add area for creating new spec
+		// Add area for creating new build
 		const $div = $('<div>');
 		const $input = $('<input class="mr" type="text" name="name" placeholder="Namn på ny">');
 		const $select = $('<select class="mr" name="race">');
@@ -79,8 +79,9 @@ class TalentCalculator
 			$select.append('<option>' + race + '</option>');
 		}
 
-		$btn.on('click', () => {
-			this.createNewSpec($input.val(), $select.val());
+		$btn.on('click', (event) => {
+			event.preventDefault();
+			this.createNewBuild($input.val(), $select.val());
 		});
 
 		$div.append($input);
@@ -89,11 +90,46 @@ class TalentCalculator
 
 		this.main.html($div);
 
-		// Add existing specs
-		const specs = prefillClass.getPrefill('talentCalculatorSpecs');
+		// Add existing builds
+		const builds = this.getAllBuilds();
 
 		const $table = $('<table cellpadding="7" border="1">');
 		$table.append('<tr><th>Namn</th><th>Ras</th><th>Redigera</th><th>Radera</th></tr>');
+
+		for (const key in builds) {
+			const build = builds[key];
+
+			const $tr = $('<tr>');
+			const $edit = $('<a href="#">Redigera</a>');
+			const $delete = $('<a href="#" style="color: #ff0000;">Radera</a>');
+			const $editTd = $('<td>');
+			const $deleteTd = $('<td>');
+
+			$edit.on('click', (event) => {
+				event.preventDefault();
+			});
+
+			$delete.on('click', (event) => {
+				event.preventDefault();
+
+				if (!confirm('Är du säker?')) {
+					return false;
+				}
+
+				this.deleteBuild(key);
+			});
+
+			$editTd.append($edit);						
+			$deleteTd.append($delete);
+
+			$tr.append(
+				'<td>' + build.name + '</td>' + 
+				'<td>' + build.race + '</td>')
+				.append($editTd)
+				.append($deleteTd);
+
+			$table.append($tr);
+		}
 
 		this.main.append('<h4 class="mt">Dina befintliga</h4>');
 		this.main.append($table);
@@ -102,14 +138,14 @@ class TalentCalculator
 	/**
 	 * Render calculator page
 	 */
-	renderCalculator(spec, currentLevel)
+	renderCalculator(build, currentLevel)
 	{
-		const race = this.getRaceClass(spec.race);
+		const race = this.getRaceClass(build.race);
 		if (!race) {
 			return;
 		}
 
-		this.main.html('<h4>' + spec.name + ' - ' + race.name + '</h4>');
+		this.main.html('<h4>' + build.name + ' - ' + race.name + '</h4>');
 
 		// Create table
 		const $table = $('<table cellpadding="7">');
@@ -151,6 +187,15 @@ class TalentCalculator
 			case 'Ork':
 				return new Orc();
 
+			case 'Människa':
+				return new Human();
+
+			case 'Dvärg':
+				return new Dwarf();
+
+			case 'Alv':
+				return new Elf();
+
 			default:
 				alert('Okänd ras!');
 				this.renderStartMenu();
@@ -160,16 +205,62 @@ class TalentCalculator
 	}
 
 	/**
-	 * Creates a new spec
+	 * Creates a new build
 	 */
-	createNewSpec(name, race)
+	createNewBuild(name, race)
 	{
-		const newSpec = {
+		const newBuild = {
 			name: name,
 			race: race,
 			levels: []
 		};
 
-		this.renderCalculator(newSpec, 1);
+		this.saveBuild(newBuild, -1)
+
+		this.renderCalculator(newBuild, 1);
+	}
+
+	/**
+	 * Get a list of all builds
+	 */
+	getAllBuilds()
+	{
+		let builds = prefillClass.getPrefill('talentCalculatorBuilds');
+
+		if (builds.length === undefined) {
+			builds = [];
+		}
+
+		return builds;
+	}
+
+	/**
+	 * Save build
+	 */
+	saveBuild(build, key)
+	{
+		let builds = this.getAllBuilds();
+
+		if (key === -1) {
+			// This is a new cpec
+			builds.push(build);
+		}
+		else {
+			builds[key] = build;
+		}
+
+		prefillClass.savePrefill('talentCalculatorBuilds', builds);
+	}
+
+	/**
+	 * Deletea build
+	 */
+	deleteBuild(key)
+	{
+		let builds = this.getAllBuilds();
+		builds.splice(key, 1);
+
+		prefillClass.savePrefill('talentCalculatorBuilds', builds);
+		this.renderStartMenu();
 	}
 }

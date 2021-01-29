@@ -20,7 +20,7 @@ class TeamGame
 
 	initPrefill()
 	{
-		$('input, select').on('change', (event) => {prefillClass.savePrefill('teamGamePrefill', event)});
+		$('input, select').on('change', (event) => {prefillClass.savePrefillInputs('teamGamePrefill', event)});
 		prefillClass.prefillInputs('teamGamePrefill');
 	}
 
