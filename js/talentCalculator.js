@@ -107,6 +107,7 @@ class TalentCalculator
 
 			$edit.on('click', (event) => {
 				event.preventDefault();
+				this.editBuild(key);
 			});
 
 			$delete.on('click', (event) => {
@@ -262,5 +263,13 @@ class TalentCalculator
 
 		prefillClass.savePrefill('talentCalculatorBuilds', builds);
 		this.renderStartMenu();
+	}
+
+	/**
+	 * Edit a build
+	 */
+	editBuild(key)
+	{
+		const build 
 	}
 }
