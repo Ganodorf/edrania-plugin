@@ -8,6 +8,7 @@ class Troll
 		this.strength = 1.6;
 		this.evasion = 0.4;
 		this.initiative = 0.5;
+		this.tactics = 0.7;
 		this.spear = 0.7;
 		this.axe = 0.8;
 		this.sword = 0.8;

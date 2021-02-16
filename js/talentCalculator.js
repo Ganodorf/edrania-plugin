@@ -8,6 +8,7 @@ class TalentCalculator
 			{stat: 'strength', text: 'Styrka'},
 			{stat: 'evasion', text: 'Undvika anfall'},
 			{stat: 'initiative', text: 'Initiativ'},
+			{stat: 'tactics', text: 'Taktik'},
 			{stat: 'spear', text: 'Spjut'},
 			{stat: 'axe', text: 'Yxa'},
 			{stat: 'sword', text: 'Svärd'},

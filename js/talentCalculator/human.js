@@ -8,6 +8,7 @@ class Human
 		this.strength = 1.1;
 		this.evasion = 1.1;
 		this.initiative = 1.1;
+		this.tactics = 1.2;
 		this.spear = 1.2;
 		this.axe = 1.2;
 		this.sword = 1.3;

@@ -8,9 +8,10 @@ class Orc
 		this.strength = 1.3;
 		this.evasion = 0.7;
 		this.initiative = 0.7;
+		this.tactics = 0.9;
 		this.spear = 0.9;
-		this.axe = 0.9;
-		this.sword = 0.9;
+		this.axe = 1;
+		this.sword = 1;
 		this.chain = 1.1;
 		this.hammer = 1.1;
 		this.shield = 1;

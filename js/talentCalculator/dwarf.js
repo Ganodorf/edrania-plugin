@@ -8,6 +8,7 @@ class Dwarf
 		this.strength = 1.2;
 		this.evasion = 0.6;
 		this.initiative = 0.8;
+		this.tactics = 1;
 		this.spear = 1;
 		this.axe = 1.2;
 		this.sword = 1.1;
