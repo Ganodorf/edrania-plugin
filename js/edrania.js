@@ -29,7 +29,7 @@ function getPlayerTime() {
  * @return {string}
  */
 function getPlayerName() {
-	return $('#gladStatus p:first').text();
+	return $('.right-content-bg:nth(1) h5').text();
 }
 
 // Display how much hp each threshold is
