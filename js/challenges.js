@@ -19,14 +19,7 @@ class Challenges
 	initIncoming()
 	{
 		// Create observer for changes on incoming table
-		const $table = $('.compact-table')[0];
-		const config = {
-			childList: true,
-			subtree: true
-		};
-
-		const observer = new MutationObserver(this.setupIncoming);
-		observer.observe($table, config);
+		new EdraniaObserver($('.compact-table')[0], this.setupIncoming);
 
 		this.setupIncoming();
 	}

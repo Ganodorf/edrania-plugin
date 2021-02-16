@@ -20,6 +20,7 @@
 				"/js/teamGame.js",
 				"/js/challenges.js",
 				"/js/tavern.js",
+				"/js/observer.js",
 				"/js/edrania.js"
 			],
 			"css": [
