@@ -146,6 +146,14 @@ class TalentCalculator
 			return;
 		}
 
+		let maxPoints = 0;
+		if (currentLevel === 1) {
+			maxPoints = this.attributePointsStart;
+		}
+		else {
+			maxPoints = this.attributePointsPerLevel;
+		}
+
 		this.main.html('<h4>' + build.name + ' - ' + race.name + '</h4>');
 
 		// Create table
@@ -172,6 +180,10 @@ class TalentCalculator
 			$tr.append($td);
 			$table.append($tr);
 		}
+
+		const $button = $('<button class="chrome-plugin-btn">Spara</button>');
+		$button.on('click', () => {			
+		});
 
 		this.main.append($table);
 	}
@@ -236,6 +248,15 @@ class TalentCalculator
 	}
 
 	/**
+	 * Get a build
+	 */
+	getBuild(key)
+	{
+		const builds = this.getAllBuilds();
+		return builds[key];
+	}
+
+	/**
 	 * Save build
 	 */
 	saveBuild(build, key)
@@ -270,6 +291,6 @@ class TalentCalculator
 	 */
 	editBuild(key)
 	{
-		const build 
+		const build = this.getBuild(key);
 	}
 }
