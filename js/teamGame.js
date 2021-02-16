@@ -77,14 +77,15 @@ class TeamGame
 	 */
 	setupViewGame()
 	{
-		if (!this.isPlayerInGame()) {
-			return false;
+		// Setup observer for changes so we can init hover if anything changes
+		for (let i = 0; i < $('.teamGameTeamContainer').length; i++) {
+			new EdraniaObserver($('.teamGameTeamContainer')[i], () => {
+				hoverInfo.initHover();
+				this.setPlayerReady();
+			});
 		}
 
-		// Set auto ready?
-		if (edraniaConfig.teamGameAutoReady) {
-			this.setPlayerReady();
-		}
+		this.setPlayerReady();
 	}
 
 	/**
@@ -106,6 +107,10 @@ class TeamGame
 	 */
 	setPlayerReady()
 	{
+		if (!edraniaConfig.teamGameAutoReady || !this.isPlayerInGame()) {
+			return;
+		}
+
 		const gameID = location.pathname.split('/')[3];
 		const toggleURL = '/TeamGame/' + gameID + '/ToggleReadyState';
 		const readyState = $('a[href="' + toggleURL + '"]').text();
