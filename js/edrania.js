@@ -94,4 +94,16 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			+ '<b>Text som kommer att visas:</b><br>' + text
 			+'</div>');
 	}
+	else if (path.search('/Duel/Reports/') > -1 && edraniaConfig.highlightInDuels) {
+		// Highlight player in report
+		const name = getPlayerName();
+		const css = {
+			color: edraniaConfig.duelHighlightColor, 
+			'font-weight': 'bold'
+		};
+
+		$('.duelName').filter(function(){
+			return ($(this).text() === name);
+		}).css(css);
+	}
 });
