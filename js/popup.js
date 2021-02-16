@@ -8,12 +8,17 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	{
 		const setting = this.name;
 
-		let current = edraniaConfig[setting];
-		if (current === undefined) {
-			current = false;
-		}
+		if (this.type === 'checkbox') {
+			let current = edraniaConfig[setting];
+			if (current === undefined) {
+				current = false;
+			}
 
-		edraniaConfig[setting] = current ? false : true;
+			edraniaConfig[setting] = current ? false : true;
+		}
+		else {
+			edraniaConfig[setting] = this.value;
+		}
 
 		chrome.storage.sync.set({'edraniaConfig': edraniaConfig});
 	}
@@ -22,7 +27,12 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 
 	for (let i = 0; i < elements.length; i++) {
 		if (edraniaConfig[elements[i].name]) {
-			elements[i].checked = true;
+			if (elements[i].type === 'checkbox') {
+				elements[i].checked = true;
+			}
+			else {
+				elements[i].value = edraniaConfig[elements[i].name];
+			}
 		}
 
 		elements[i].addEventListener('change', saveConfig);
