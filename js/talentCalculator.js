@@ -28,6 +28,8 @@ class TalentCalculator
 		this.attributePointsStart = 150;
 		this.attributePointsPerLevel = 20;
 
+		this.loadedBuildKey = -1;
+
 		this.openCalculator();
 	}
 
@@ -70,6 +72,8 @@ class TalentCalculator
 	 */
 	renderStartMenu()
 	{
+		this.loadedBuildKey = -1;
+
 		// Add area for creating new build
 		const $div = $('<div>');
 		const $input = $('<input class="mr" type="text" name="name" placeholder="Namn på ny">');
@@ -142,20 +146,25 @@ class TalentCalculator
 	 */
 	renderCalculator(build, currentLevel)
 	{
+		currentLevel = parseInt(currentLevel);
 		const race = this.getRaceClass(build.race);
 		if (!race) {
 			return;
 		}
 
 		let maxPoints = 0;
-		if (currentLevel === 1) {
+		if (currentLevel === 0) {
 			maxPoints = this.attributePointsStart;
 		}
 		else {
 			maxPoints = this.attributePointsPerLevel;
 		}
 
-		this.main.html('<h4>' + build.name + ' - ' + race.name + '</h4>');
+		this.main.html('<h4>' + build.name + ' - ' + race.name + ' grad ' + (currentLevel + 1) + '</h4>');
+
+		const $pointsLeft = $('<span>' + maxPoints + '</span>');		
+		this.main.append($pointsLeft);
+		$pointsLeft.after(' kvar att spendera');
 
 		// Create table
 		const $table = $('<table cellpadding="7">');
@@ -164,29 +173,73 @@ class TalentCalculator
 			const $tr = $('<tr>');
 			$tr.append('<th>' + stat.text + '</th>');
 
+			let currentPoints = 0;
+			if (build.levels[currentLevel] !== undefined) {
+				currentPoints = build.levels[currentLevel][stat.stat] || 0;
+			}			
+
 			const $td = $('<td>');
-			const $input = $('<input type="number" name="' + stat.stat + '" value="0">');
+			const $input = $('<input class="js-points" type="number" name="' + stat.stat + '" value="' + currentPoints + '" min="0">');
 			const $span = $('<span class="ml">');
 
 			$td.append($input);
 			$td.append($span);
 
 			$input.on('keyup', (event) => {
-				const value = round($input.val() * race[stat.stat], 2);
-				$span.html(value);
-			});
+				let points = $input.val();
+				if (points === '') {
+					points = 0;
+					$input.val(0);
+				}
 
-			$input.trigger('keyup');
+				const totalPoints = this.getSpendedPoints();
+
+				if (totalPoints > maxPoints) {
+					const diff = totalPoints - maxPoints;
+					points -= diff;
+					$input.val(points);
+				}
+
+				let pointsLeft = maxPoints - totalPoints;
+				if (pointsLeft < 0) {
+					pointsLeft = 0;
+				}
+
+				$span.html(round(points * race[stat.stat], 2));
+				$pointsLeft.text(pointsLeft);
+			})
+			.trigger('keyup');
 			
 			$tr.append($td);
 			$table.append($tr);
 		}
 
 		const $button = $('<button class="chrome-plugin-btn">Spara</button>');
-		$button.on('click', () => {			
+		$button.on('click', () => {
+			let level = {};
+
+			$('.js-points').each((key, input) => {
+				level[$(input).attr('name')] = parseInt($(input).val());
+			});
+
+			build.levels[currentLevel] = level;
+			this.saveBuild(build, this.loadedBuildKey);
 		});
 
-		this.main.append($table);
+		this.main.append($table).append($button);
+	}
+
+	/**
+	 * Get total spended points on current level
+	 */
+	getSpendedPoints()
+	{
+		let points = 0;
+		$('.js-points').each(function(){
+			points += parseInt($(this).val());
+		});
+
+		return points;
 	}
 
 	/**
@@ -231,7 +284,7 @@ class TalentCalculator
 
 		this.saveBuild(newBuild, -1)
 
-		this.renderCalculator(newBuild, 1);
+		this.renderCalculator(newBuild, 0);
 	}
 
 	/**
@@ -292,6 +345,28 @@ class TalentCalculator
 	 */
 	editBuild(key)
 	{
+		this.loadedBuildKey = key;
 		const build = this.getBuild(key);
+
+		const $table = $('<table cellpadding="7" border="1">');
+
+		for (let key in build.levels) {			
+			const level = parseInt(key) + 1;
+
+			const $a = $('<a href="#">Redigera</a>');
+			$a.on('click', (e) => {
+				e.preventDefault();
+				this.renderCalculator(build, key);
+			});
+
+			const $tr = $('<tr>');
+			const $td = $('<td>');
+
+			$td.append($a);
+			$tr.append('<td>Grad ' + level + '</td>').append($td);
+			$table.append($tr);
+		}
+
+		this.main.html($table);
 	}
 }
