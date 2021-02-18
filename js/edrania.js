@@ -65,8 +65,17 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init quick shop for tavern
 	new Tavern();
 
-	new TalentCalculator();
-
+	// Add button for opening talen calculator
+	const talentCalculator = new TalentCalculator();
+	const $openCalculator = $('<a class="black" href="#">Talent calculator</a>');
+	$openCalculator.on('click', function(){
+		talentCalculator.openCalculator();
+		return false;
+	});
+	const $li = $('<li>');
+	$li.append($openCalculator);
+	$('.side-menu:first .menu-list:first').append($li);
+	
 	let path = location.pathname;
 	// Add trailing slash to path if missing
 	if (path.slice(-1) !== '/') {

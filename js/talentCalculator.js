@@ -29,8 +29,6 @@ class TalentCalculator
 		this.attributePointsPerLevel = 20;
 
 		this.loadedBuildKey = -1;
-
-		this.openCalculator();
 	}
 
 	/**
