@@ -172,7 +172,7 @@ class TalentCalculator
 		this.main.append($pointsLeft);
 		$pointsLeft.after(' kvar att spendera');
 
-		const totalPoints = this.getTotalPoints(build, currentLevel);
+		const totalPoints = this.getTotalPoints(build, currentLevel - 1);
 
 		// Create table
 		const $table = $('<table cellpadding="7">');
@@ -188,10 +188,10 @@ class TalentCalculator
 
 			const $td = $('<td>');
 			const $input = $('<input class="js-points" type="number" name="' + stat.stat + '" value="' + currentPoints + '" min="0">');
-			const $span = $('<span class="ml">');
+			const $spanTotal = $('<span class="ml">');
 
 			$td.append($input);
-			$td.append($span);
+			$td.append($spanTotal);
 
 			$input.on('keyup', (event) => {
 				let points = $input.val();
@@ -213,7 +213,8 @@ class TalentCalculator
 					pointsLeft = 0;
 				}
 
-				$span.html(round(totalPoints[stat.stat] + points * race[stat.stat], 2));
+				const statTotalPoints = totalPoints[stat.stat] || 0;
+				$spanTotal.html(round(statTotalPoints + points * race[stat.stat], 2));
 				$pointsLeft.text(pointsLeft);
 			})
 			.trigger('keyup');
@@ -222,7 +223,7 @@ class TalentCalculator
 			$table.append($tr);
 		}
 
-		const $button = $('<button class="chrome-plugin-btn">Spara</button>');
+		const $button = $('<button class="chrome-plugin-btn mt">Spara</button>');
 		$button.on('click', () => {
 			let level = {};
 
@@ -258,9 +259,7 @@ class TalentCalculator
 				}
 
 				// Do not add last level
-				if (i !== toLevel) {
-					totalPoints[stat.stat] += round(level[stat.stat] * race[stat.stat], 2);
-				}				
+				totalPoints[stat.stat] += round(level[stat.stat] * race[stat.stat], 2);
 			}
 		}
 
@@ -403,8 +402,8 @@ class TalentCalculator
 		this.loadedBuildKey = key;
 		const build = this.getBuild(key);
 
-		const $table = $('<table cellpadding="7" border="1">');
-		$table.append('<tr><th>Grad</th><th>Spenderade poäng</th><th>Redigera</th></tr>');
+		const $levelTable = $('<table cellpadding="7" border="1">');
+		$levelTable.append('<tr><th>Grad</th><th>Spenderade poäng</th><th>Redigera</th></tr>');
 
 		for (let key in build.levels) {			
 			const level = parseInt(key) + 1;
@@ -415,8 +414,8 @@ class TalentCalculator
 				spendedPoints += build.levels[key][stat.stat];
 			}
 
-			const $a = $('<a href="#">Redigera</a>');
-			$a.on('click', (e) => {
+			const $edit = $('<a href="#">Redigera</a>');
+			$edit.on('click', (e) => {
 				e.preventDefault();
 				this.renderCalculator(build, key);
 			});
@@ -424,20 +423,37 @@ class TalentCalculator
 			const $tr = $('<tr>');
 			const $td = $('<td>');
 
-			$td.append($a);
+			$td.append($edit);
 			$tr.append('<td>Grad ' + level + '</td><td>' + spendedPoints + '/' + maxPoints + '</td>').append($td);
-			$table.append($tr);
+			$levelTable.append($tr);
 		}
 
-		const $a = $('<a href="#">Lägg till grad</a>')
-		$a.on('click', () => {
+		const $addLevel = $('<a href="#">Lägg till grad</a>')
+		$addLevel.on('click', () => {
 			this.addLevelToBuild(build, key);
 			this.renderEditBuild(key);
 			return false;
 		});
 
+		const $flex = $('<div style="display: flex;">');
+		const $one = $('<div class="mr" style="overflow-y: scroll; max-height: 700px;">');
+		const $two = $('<div>');
+
+		const $totalPointsTable = $('<table cellpadding="7" border="1">');
+		const totalPoints = this.getTotalPoints(build, (build.levels.length - 1));
+
+		for (const stat of this.stats) {
+			const $tr = $('<tr>');
+			$tr.append('<th>' + stat.text + '</th>');
+			$tr.append('<td>' + totalPoints[stat.stat] + '</td>');
+			$totalPointsTable.append($tr);
+		}
+
+		$one.append($levelTable).append($addLevel);
+		$two.append($totalPointsTable);
+		$flex.append($one).append($two);
+
 		this.main.html('<h4>' + build.name + '</h4>');
-		this.main.append($table);
-		this.main.append($a);
+		this.main.append($flex);
 	}
 }
