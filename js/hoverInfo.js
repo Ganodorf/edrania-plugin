@@ -19,7 +19,8 @@ class HoverInfo
 	 */
 	initHover()
 	{
-		$('a').off('mouseenter').on('mouseenter', (event) => {
+		$('a').off('mouseenter mouseleave mousemove')
+		.on('mouseenter', (event) => {
 			// Wait 100 ms in case of user is hovering on multiple links in a short time
 			this.hoverTimeout = setTimeout(() => {
 				this.hover(event);

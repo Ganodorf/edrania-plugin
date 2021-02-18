@@ -29,7 +29,7 @@ function getPlayerTime() {
  * @return {string}
  */
 function getPlayerName() {
-	return $('#gladStatus p:first').text();
+	return $('.right-content-bg:nth(1) h5').text();
 }
 	
 /**
@@ -115,5 +115,17 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			+ 'Texten som visas är begränsad till 200 tecken.<br><br>'
 			+ '<b>Text som kommer att visas:</b><br>' + text
 			+'</div>');
+	}
+	else if (path.search('/Duel/Reports/') > -1 && edraniaConfig.highlightInDuels) {
+		// Highlight player in report
+		const name = getPlayerName();
+		const css = {
+			color: edraniaConfig.duelHighlightColor, 
+			'font-weight': 'bold'
+		};
+
+		$('.duelName').filter(function(){
+			return ($(this).text() === name);
+		}).css(css);
 	}
 });
