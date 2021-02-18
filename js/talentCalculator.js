@@ -36,6 +36,11 @@ class TalentCalculator
 	 */
 	openCalculator()
 	{
+		// Do not open multiple windows
+		if ($('.chrome-plugin-talent-calculator').length) {
+			return;
+		}
+
 		const $window = $('<div class="chrome-plugin-talent-calculator">');
 		const $menuBar = $('<div class="chrome-plugin-talent-calculator__menu">');
 
@@ -97,16 +102,31 @@ class TalentCalculator
 		const builds = this.getAllBuilds();
 
 		const $table = $('<table cellpadding="7" border="1">');
-		$table.append('<tr><th>Namn</th><th>Ras</th><th>Redigera</th><th>Radera</th></tr>');
+		$table.append('<tr><th>Namn</th><th>Ras</th><th>Använd</th><th>Redigera</th><th>Radera</th></tr>');
+
+		const useBuild = localStorage.getItem('talentCalculatorBuildKey');
 
 		for (const key in builds) {
 			const build = builds[key];
 
+			let useBuildChecked = '';
+			if (useBuild == key) {
+				useBuildChecked = ' checked';
+			}
+
 			const $tr = $('<tr>');
+			const $use = $('<input type="radio" name="useBuild" value="' + key + '"' + useBuildChecked + '>');
 			const $edit = $('<a href="#">Redigera</a>');
 			const $delete = $('<a href="#" style="color: #ff0000;">Radera</a>');
+			const $useTd = $('<td style="text-align: center;">');
 			const $editTd = $('<td>');
 			const $deleteTd = $('<td>');
+
+			$use.on('change', () => {
+				if ($use.is(':checked')) {
+					localStorage.setItem('talentCalculatorBuildKey', key);
+				}
+			});
 
 			$edit.on('click', (event) => {
 				event.preventDefault();
@@ -123,12 +143,14 @@ class TalentCalculator
 				this.deleteBuild(key);
 			});
 
-			$editTd.append($edit);						
+			$useTd.append($use);
+			$editTd.append($edit);					
 			$deleteTd.append($delete);
 
 			$tr.append(
 				'<td>' + build.name + '</td>' + 
 				'<td>' + build.race + '</td>')
+				.append($useTd)
 				.append($editTd)
 				.append($deleteTd);
 
@@ -389,6 +411,16 @@ class TalentCalculator
 	{
 		let builds = this.getAllBuilds();
 		builds.splice(key, 1);
+
+		// Check if talentCalculatorBuildKey should be updated
+		let talentCalculatorBuildKey = localStorage.getItem('talentCalculatorBuildKey');
+		if (talentCalculatorBuildKey == key) {
+			localStorage.removeItem('talentCalculatorBuildKey');
+		}
+		else if (talentCalculatorBuildKey > key) {
+			talentCalculatorBuildKey--;
+			localStorage.setItem('talentCalculatorBuildKey', talentCalculatorBuildKey);
+		}
 
 		prefillClass.savePrefill('talentCalculatorBuilds', builds);
 		this.renderStartMenu();
