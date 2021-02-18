@@ -110,7 +110,7 @@ class TalentCalculator
 
 			$edit.on('click', (event) => {
 				event.preventDefault();
-				this.editBuild(key);
+				this.renderEditBuild(key);
 			});
 
 			$delete.on('click', (event) => {
@@ -162,7 +162,7 @@ class TalentCalculator
 
 		const $goBack = $('<a href="#">Tillbaka</a>');
 		$goBack.on('click', () => {
-			this.editBuild(this.loadedBuildKey)
+			this.renderEditBuild(this.loadedBuildKey)
 			return false;
 		});
 
@@ -398,7 +398,7 @@ class TalentCalculator
 	/**
 	 * Edit a build
 	 */
-	editBuild(key)
+	renderEditBuild(key)
 	{
 		this.loadedBuildKey = key;
 		const build = this.getBuild(key);
@@ -432,7 +432,7 @@ class TalentCalculator
 		const $a = $('<a href="#">Lägg till grad</a>')
 		$a.on('click', () => {
 			this.addLevelToBuild(build, key);
-			this.editBuild(key);
+			this.renderEditBuild(key);
 			return false;
 		});
 
