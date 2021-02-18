@@ -75,6 +75,11 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	const $li = $('<li>');
 	$li.append($openCalculator);
 	$('.side-menu:first .menu-list:first').append($li);
+
+	// Has player leveld up?
+	if ($('#levelUpForm').length) {
+		talentCalculator.placeLevelUp();
+	}
 	
 	let path = location.pathname;
 	// Add trailing slash to path if missing

@@ -13,8 +13,8 @@ class TalentCalculator
 			{stat: 'axe', text: 'Yxa'},
 			{stat: 'sword', text: 'Svärd'},
 			{stat: 'chain', text: 'Kättingvapen'},
-			{stat: 'hammer', text: 'Hammare'},
-			{stat: 'shield', text: 'Sköld'}
+			{stat: 'shield', text: 'Sköld'},
+			{stat: 'hammer', text: 'Hammare'}
 		];
 
 		this.races = [
@@ -487,5 +487,34 @@ class TalentCalculator
 
 		this.main.html('<h4>' + build.name + '</h4>');
 		this.main.append($flex);
+	}
+
+	/**
+	 * Place level up points
+	 */
+	placeLevelUp()
+	{
+		const key = localStorage.getItem('talentCalculatorBuildKey');
+
+		if (key === null) {
+			return;
+		}
+
+		const build = this.getBuild(key);
+		const currentLevel = getPlayerLevel() - 1;
+		const level = build.levels[currentLevel] || null;
+
+		if (level === null) {
+			return;
+		}
+
+		// Place points
+		$('#levelUpForm input[type=number]').each((key, element) => {
+			const stat = this.stats[key];
+			const points = level[stat.stat];
+			$(element).val(points);
+			$(element)[0].dispatchEvent(new Event('change'));
+			$(element)[0].dispatchEvent(new Event('keyup'));
+		});
 	}
 }
