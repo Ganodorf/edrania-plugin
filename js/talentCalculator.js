@@ -160,11 +160,21 @@ class TalentCalculator
 			maxPoints = this.attributePointsPerLevel;
 		}
 
-		this.main.html('<h4>' + build.name + ' - ' + race.name + ' grad ' + (currentLevel + 1) + '</h4>');
+		this.main.html('<h4>' + build.name + ' - grad ' + (currentLevel + 1) + '</h4>');
+
+		const $goBack = $('<a href="#">Tillbaka</a>');
+		$goBack.on('click', () => {
+			this.editBuild(this.loadedBuildKey)
+			return false;
+		});
+
+		this.main.append($goBack).append('<br>');
 
 		const $pointsLeft = $('<span>' + maxPoints + '</span>');		
 		this.main.append($pointsLeft);
 		$pointsLeft.after(' kvar att spendera');
+
+		const totalPoints = this.getTotalPoints(build, currentLevel);
 
 		// Create table
 		const $table = $('<table cellpadding="7">');
@@ -192,20 +202,20 @@ class TalentCalculator
 					$input.val(0);
 				}
 
-				const totalPoints = this.getSpendedPoints();
+				const spendedPoints = this.getSpendedPoints();
 
-				if (totalPoints > maxPoints) {
-					const diff = totalPoints - maxPoints;
+				if (spendedPoints > maxPoints) {
+					const diff = spendedPoints - maxPoints;
 					points -= diff;
 					$input.val(points);
 				}
 
-				let pointsLeft = maxPoints - totalPoints;
+				let pointsLeft = maxPoints - spendedPoints;
 				if (pointsLeft < 0) {
 					pointsLeft = 0;
 				}
 
-				$span.html(round(points * race[stat.stat], 2));
+				$span.html(round(totalPoints[stat.stat] + points * race[stat.stat], 2));
 				$pointsLeft.text(pointsLeft);
 			})
 			.trigger('keyup');
@@ -224,9 +234,39 @@ class TalentCalculator
 
 			build.levels[currentLevel] = level;
 			this.saveBuild(build, this.loadedBuildKey);
+
+			const $span = $('<span>Sparad</span>');
+			$button.after($span);
+			$span.fadeOut('slow');
 		});
 
 		this.main.append($table).append($button);
+	}
+
+	/**
+	 * Get total points spent up to a level with race bonus applied
+	 */
+	getTotalPoints(build, toLevel)
+	{
+		const race = this.getRaceClass(build.race);
+		const totalPoints = {};
+
+		for (let i = 0; i <= toLevel; i++) {
+			const level = build.levels[i];
+
+			for (const stat of this.stats) {
+				if (totalPoints[stat.stat] === undefined) {
+					totalPoints[stat.stat] = 0;
+				}
+
+				// Do not add last level
+				if (i !== toLevel) {
+					totalPoints[stat.stat] += round(level[stat.stat] * race[stat.stat], 2);
+				}				
+			}
+		}
+
+		return totalPoints;
 	}
 
 	/**
@@ -281,10 +321,27 @@ class TalentCalculator
 			race: race,
 			levels: []
 		};
-
+		
 		this.saveBuild(newBuild, -1)
 
+		this.loadedBuildKey = this.getAllBuilds().length - 1;
+		this.addLevelToBuild(newBuild, this.loadedBuildKey);
+
 		this.renderCalculator(newBuild, 0);
+	}
+
+	/**
+	 * Add a new level to the build
+	 */
+	addLevelToBuild(build, buildKey)
+	{
+		const level = {};
+		for (const stat of this.stats) {
+			level[stat.stat] = 0;
+		}
+
+		build.levels.push(level);
+		this.saveBuild(build, buildKey);
 	}
 
 	/**
@@ -349,9 +406,16 @@ class TalentCalculator
 		const build = this.getBuild(key);
 
 		const $table = $('<table cellpadding="7" border="1">');
+		$table.append('<tr><th>Grad</th><th>Spenderade poäng</th><th>Redigera</th></tr>');
 
 		for (let key in build.levels) {			
 			const level = parseInt(key) + 1;
+
+			let spendedPoints = 0;
+			const maxPoints = level === 1 ? this.attributePointsStart : this.attributePointsPerLevel;
+			for (const stat of this.stats) {
+				spendedPoints += build.levels[key][stat.stat];
+			}
 
 			const $a = $('<a href="#">Redigera</a>');
 			$a.on('click', (e) => {
@@ -363,10 +427,19 @@ class TalentCalculator
 			const $td = $('<td>');
 
 			$td.append($a);
-			$tr.append('<td>Grad ' + level + '</td>').append($td);
+			$tr.append('<td>Grad ' + level + '</td><td>' + spendedPoints + '/' + maxPoints + '</td>').append($td);
 			$table.append($tr);
 		}
 
-		this.main.html($table);
+		const $a = $('<a href="#">Lägg till grad</a>')
+		$a.on('click', () => {
+			this.addLevelToBuild(build, key);
+			this.editBuild(key);
+			return false;
+		});
+
+		this.main.html('<h4>' + build.name + '</h4>');
+		this.main.append($table);
+		this.main.append($a);
 	}
 }
