@@ -41,7 +41,7 @@ class HoverInfo
 			if (this.playerProfileRequest !== null) {
 				this.playerProfileRequest.abort();
 			}
-			
+
 			$('.chrome-plugin-info-box').remove();
 		})
 		.on('mousemove', (event) => {
@@ -53,7 +53,7 @@ class HoverInfo
 	}
 
 	/**
-	 * Init hover boxes for 
+	 * Init hover boxes for
 	 */
 	hover(event)
 	{
@@ -68,7 +68,7 @@ class HoverInfo
 
 		// Check if link match weapon
 		if (href.search('/Vendor/Display/') > -1 && edraniaConfig.hoverWeaponsActive) {
-			type = 'weapon';			
+			type = 'weapon';
 		}
 		else if (href === '/MyGlad/Profile/Attributes' && edraniaConfig.hoverAttributesActive) {
 			type = 'attributes';
@@ -195,7 +195,7 @@ class HoverInfo
 
 		if (race !== undefined) {
 			container.append(
-				'<div><b>Ras:</b> ' + race + ' (grad ' + level + ')</div>');			
+				'<div><b>Ras:</b> ' + race + ' (grad ' + level + ')</div>');
 		}
 
 		// Check if biography contains any plugin text
@@ -203,12 +203,12 @@ class HoverInfo
 		if (biography !== undefined) {
 			const regex = /(?<=\[plugin\])[\w\W]*(?=\[\/plugin\])/g;
 			const matches = biography.match(regex);
-			
+
 			if (matches !== null) {
 				const text = matches[0].replaceAll(/[<>]*/g, '').substring(0, 200);
 				container.append('<div><b>Info:</b> ' + text + '</div>');
 			}
-		}		
+		}
 
 		this.renderBox(container);
 

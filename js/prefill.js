@@ -24,7 +24,7 @@ class Prefill
 	{
 		const $input = $(event.currentTarget);
 		let prefillData = this.getPrefill(itemName);
-		
+
 		if ($input.is(':checkbox')) {
 			prefillData[$input.attr('name')] = $input.is(':checked') ? true : false;
 		}
@@ -65,7 +65,7 @@ class Prefill
 				$select.val(value);
 				// trigger('change') does not work beacuse of framework event listeners
 				$select[0].dispatchEvent(new Event('change'));
-			}			
+			}
 		});
 
 		$('input').each(function(){

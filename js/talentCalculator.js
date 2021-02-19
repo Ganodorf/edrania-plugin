@@ -48,7 +48,7 @@ class TalentCalculator
 		$closeBtn.on('click', () => {
 			$window.remove();
 			return false;
-		});		
+		});
 
 		const $menuBtn = $('<a href="#">Meny</a>');
 		$menuBtn.on('click', () => {
@@ -144,11 +144,11 @@ class TalentCalculator
 			});
 
 			$useTd.append($use);
-			$editTd.append($edit);					
+			$editTd.append($edit);
 			$deleteTd.append($delete);
 
 			$tr.append(
-				'<td>' + build.name + '</td>' + 
+				'<td>' + build.name + '</td>' +
 				'<td>' + build.race + '</td>')
 				.append($useTd)
 				.append($editTd)
@@ -190,7 +190,7 @@ class TalentCalculator
 
 		this.main.append($goBack).append('<br>');
 
-		const $pointsLeft = $('<span>' + maxPoints + '</span>');		
+		const $pointsLeft = $('<span>' + maxPoints + '</span>');
 		this.main.append($pointsLeft);
 		$pointsLeft.after(' kvar att spendera');
 
@@ -212,7 +212,7 @@ class TalentCalculator
 			pointsLeft -= currentPoints;
 
 			const $td = $('<td>');
-			const $input = $('<input class="js-points" type="number" name="' + stat.stat + '" value="' + currentPoints + '" min="0">');
+			const $input = $('<input class="js-points chrome-plugin-talent-input" type="number" name="' + stat.stat + '" value="' + currentPoints + '" min="0">');
 			const $spanTotal = $('<span class="ml">');
 
 			$td.append($input);
@@ -243,7 +243,7 @@ class TalentCalculator
 				$pointsLeft.text(pointsLeft);
 			})
 			.trigger('keyup');
-			
+
 			$tr.append($td);
 			$table.append($tr);
 		}
@@ -280,7 +280,7 @@ class TalentCalculator
 		const $levelTable = $('<table cellpadding="7" border="1">');
 		$levelTable.append('<tr><th>Grad</th><th>Spenderade poäng</th><th>Redigera</th></tr>');
 
-		for (let key in build.levels) {			
+		for (let key in build.levels) {
 			const level = parseInt(key) + 1;
 
 			let spendedPoints = 0;
@@ -395,7 +395,7 @@ class TalentCalculator
 				this.renderStartMenu();
 				return false;
 		}
-		
+
 	}
 
 	/**
@@ -408,7 +408,7 @@ class TalentCalculator
 			race: race,
 			levels: []
 		};
-		
+
 		this.saveBuild(newBuild, -1)
 
 		this.loadedBuildKey = this.getAllBuilds().length - 1;
@@ -492,7 +492,7 @@ class TalentCalculator
 
 		prefillClass.savePrefill('talentCalculatorBuilds', builds);
 		this.renderStartMenu();
-	}	
+	}
 
 	/**
 	 * Place level up points
