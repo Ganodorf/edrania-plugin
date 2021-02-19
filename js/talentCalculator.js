@@ -190,6 +190,10 @@ class TalentCalculator
 
 		this.main.append($goBack).append('<br>');
 
+		if ($currentLevel > 0) {
+			$prevLevel = $('<a href="#">');
+		}
+
 		const $pointsLeft = $('<span>' + maxPoints + '</span>');
 		this.main.append($pointsLeft);
 		$pointsLeft.after(' kvar att spendera');

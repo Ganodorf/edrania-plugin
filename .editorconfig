@@ -10,9 +10,5 @@ indent_style = tab
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.asp]
-charset = ISO-8859-1
-end_of_line = crlf
-
 [*.md]
 trim_trailing_whitespace = false
