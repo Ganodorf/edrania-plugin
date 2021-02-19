@@ -198,6 +198,7 @@ class TalentCalculator
 
 		// Create table
 		const $table = $('<table cellpadding="7">');
+		let pointsLeft = currentLevel == 0 ? this.attributePointsStart : this.attributePointsPerLevel;
 
 		for (const stat of this.stats) {
 			const $tr = $('<tr>');
@@ -206,7 +207,9 @@ class TalentCalculator
 			let currentPoints = 0;
 			if (build.levels[currentLevel] !== undefined) {
 				currentPoints = build.levels[currentLevel][stat.stat] || 0;
-			}			
+			}
+
+			pointsLeft -= currentPoints;
 
 			const $td = $('<td>');
 			const $input = $('<input class="js-points" type="number" name="' + stat.stat + '" value="' + currentPoints + '" min="0">');
@@ -245,6 +248,8 @@ class TalentCalculator
 			$table.append($tr);
 		}
 
+		$pointsLeft.text(pointsLeft);
+
 		const $button = $('<button class="chrome-plugin-btn mt">Spara</button>');
 		$button.on('click', () => {
 			let level = {};
@@ -262,6 +267,69 @@ class TalentCalculator
 		});
 
 		this.main.append($table).append($button);
+	}
+
+	/**
+	 * Edit a build
+	 */
+	renderEditBuild(key)
+	{
+		this.loadedBuildKey = key;
+		const build = this.getBuild(key);
+
+		const $levelTable = $('<table cellpadding="7" border="1">');
+		$levelTable.append('<tr><th>Grad</th><th>Spenderade poäng</th><th>Redigera</th></tr>');
+
+		for (let key in build.levels) {			
+			const level = parseInt(key) + 1;
+
+			let spendedPoints = 0;
+			const maxPoints = level === 1 ? this.attributePointsStart : this.attributePointsPerLevel;
+			for (const stat of this.stats) {
+				spendedPoints += build.levels[key][stat.stat];
+			}
+
+			const $edit = $('<a href="#">Redigera</a>');
+			$edit.on('click', (e) => {
+				e.preventDefault();
+				this.renderCalculator(build, key);
+			});
+
+			const $tr = $('<tr>');
+			const $td = $('<td>');
+
+			$td.append($edit);
+			$tr.append('<td>Grad ' + level + '</td><td>' + spendedPoints + '/' + maxPoints + '</td>').append($td);
+			$levelTable.append($tr);
+		}
+
+		const $addLevel = $('<a href="#">Lägg till grad</a>')
+		$addLevel.on('click', () => {
+			this.addLevelToBuild(build, key);
+			this.renderEditBuild(key);
+			return false;
+		});
+
+		const $flex = $('<div style="display: flex;">');
+		const $one = $('<div class="mr" style="overflow-y: scroll; max-height: 700px;">');
+		const $two = $('<div>');
+
+		const $totalPointsTable = $('<table cellpadding="7" border="1">');
+		const totalPoints = this.getTotalPoints(build, (build.levels.length - 1));
+
+		for (const stat of this.stats) {
+			const $tr = $('<tr>');
+			$tr.append('<th>' + stat.text + '</th>');
+			$tr.append('<td>' + totalPoints[stat.stat] + '</td>');
+			$totalPointsTable.append($tr);
+		}
+
+		$one.append($levelTable).append($addLevel);
+		$two.append($totalPointsTable);
+		$flex.append($one).append($two);
+
+		this.main.html('<h4>' + build.name + '</h4>');
+		this.main.append($flex);
 	}
 
 	/**
@@ -424,70 +492,7 @@ class TalentCalculator
 
 		prefillClass.savePrefill('talentCalculatorBuilds', builds);
 		this.renderStartMenu();
-	}
-
-	/**
-	 * Edit a build
-	 */
-	renderEditBuild(key)
-	{
-		this.loadedBuildKey = key;
-		const build = this.getBuild(key);
-
-		const $levelTable = $('<table cellpadding="7" border="1">');
-		$levelTable.append('<tr><th>Grad</th><th>Spenderade poäng</th><th>Redigera</th></tr>');
-
-		for (let key in build.levels) {			
-			const level = parseInt(key) + 1;
-
-			let spendedPoints = 0;
-			const maxPoints = level === 1 ? this.attributePointsStart : this.attributePointsPerLevel;
-			for (const stat of this.stats) {
-				spendedPoints += build.levels[key][stat.stat];
-			}
-
-			const $edit = $('<a href="#">Redigera</a>');
-			$edit.on('click', (e) => {
-				e.preventDefault();
-				this.renderCalculator(build, key);
-			});
-
-			const $tr = $('<tr>');
-			const $td = $('<td>');
-
-			$td.append($edit);
-			$tr.append('<td>Grad ' + level + '</td><td>' + spendedPoints + '/' + maxPoints + '</td>').append($td);
-			$levelTable.append($tr);
-		}
-
-		const $addLevel = $('<a href="#">Lägg till grad</a>')
-		$addLevel.on('click', () => {
-			this.addLevelToBuild(build, key);
-			this.renderEditBuild(key);
-			return false;
-		});
-
-		const $flex = $('<div style="display: flex;">');
-		const $one = $('<div class="mr" style="overflow-y: scroll; max-height: 700px;">');
-		const $two = $('<div>');
-
-		const $totalPointsTable = $('<table cellpadding="7" border="1">');
-		const totalPoints = this.getTotalPoints(build, (build.levels.length - 1));
-
-		for (const stat of this.stats) {
-			const $tr = $('<tr>');
-			$tr.append('<th>' + stat.text + '</th>');
-			$tr.append('<td>' + totalPoints[stat.stat] + '</td>');
-			$totalPointsTable.append($tr);
-		}
-
-		$one.append($levelTable).append($addLevel);
-		$two.append($totalPointsTable);
-		$flex.append($one).append($two);
-
-		this.main.html('<h4>' + build.name + '</h4>');
-		this.main.append($flex);
-	}
+	}	
 
 	/**
 	 * Place level up points
