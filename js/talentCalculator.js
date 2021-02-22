@@ -56,8 +56,15 @@ class TalentCalculator
 			return false;
 		});
 
+		const $importBtn = $('<a href="#">Importera</a>');
+		$importBtn.on('click', () => {
+			this.renderImportBuild();
+			return false;
+		});
+
 		$menuBar.append($closeBtn);
 		$menuBar.append($menuBtn);
+		$menuBar.append($importBtn);
 
 		$window.append($menuBar);
 
@@ -102,7 +109,7 @@ class TalentCalculator
 		const builds = this.getAllBuilds();
 
 		const $table = $('<table cellpadding="7" border="1">');
-		$table.append('<tr><th>Namn</th><th>Ras</th><th>Använd</th><th>Redigera</th><th>Radera</th></tr>');
+		$table.append('<tr><th>Namn</th><th>Ras</th><th>Använd</th><th>Redigera</th><th>Exportera</th><th>Radera</th></tr>');
 
 		const useBuild = localStorage.getItem('talentCalculatorBuildKey');
 
@@ -117,9 +124,11 @@ class TalentCalculator
 			const $tr = $('<tr>');
 			const $use = $('<input type="radio" name="useBuild" value="' + key + '"' + useBuildChecked + '>');
 			const $edit = $('<a href="#">Redigera</a>');
+			const $export = $('<a href="#">Exportera</a>');
 			const $delete = $('<a class="text-error" href="#">Radera</a>');
 			const $useTd = $('<td style="text-align: center;">');
 			const $editTd = $('<td>');
+			const $exportTd = $('<td>');
 			const $deleteTd = $('<td>');
 
 			$use.on('change', () => {
@@ -131,6 +140,11 @@ class TalentCalculator
 			$edit.on('click', (event) => {
 				event.preventDefault();
 				this.renderEditBuild(key);
+			});
+
+			$export.on('click', (event) => {
+				event.preventDefault();
+				this.renderExportBuild(build);
 			});
 
 			$delete.on('click', (event) => {
@@ -145,6 +159,7 @@ class TalentCalculator
 
 			$useTd.append($use);
 			$editTd.append($edit);
+			$exportTd.append($export);
 			$deleteTd.append($delete);
 
 			$tr.append(
@@ -152,6 +167,7 @@ class TalentCalculator
 				'<td>' + build.race + '</td>')
 				.append($useTd)
 				.append($editTd)
+				.append($exportTd)
 				.append($deleteTd);
 
 			$table.append($tr);
@@ -353,6 +369,44 @@ class TalentCalculator
 
 		this.main.html('<h4>' + build.name + '</h4>');
 		this.main.append($flex);
+	}
+
+	/**
+	 * Render export build
+	 */
+	renderExportBuild(build)
+	{
+		const $copy = $('<a class="chrome-plugin-talent-btn" href="#">Kopiera</a>');
+		$copy.on('click', () => {
+			$('.chrome-plugin-talent-export').select();
+			document.execCommand('copy');
+			return false;
+		});
+
+		this.main.html('<h4>Exportera ' + build.name + '</h4>');
+		this.main.append('<p>Kopiera hela innehållet i textrutan.</p>')
+			.append($copy)
+			.append('<textarea class="chrome-plugin-talent-export">' + JSON.stringify(build) + '</textarea>');
+	}
+
+	/**
+	 * Render import build
+	 */
+	renderImportBuild()
+	{
+		const $import = $('<a class="chrome-plugin-talent-btn" href="#">Importera</a>');
+		$import.on('click', () => {
+			const newBuild = JSON.parse($('.chrome-plugin-talent-export').val());
+			this.saveBuild(newBuild, -1);
+			const newKey = this.getAllBuilds().length - 1;
+			this.renderEditBuild(newKey);
+			return false;
+		});
+
+		this.main.html('<h4>Importera</h4>');
+		this.main.append('<p>Här kan du importera en build som någon annan har skapat om du har fått deras json-sträng.<br>Klistra in den i textrutan nedanför och klickar på importera.</p>')
+			.append('<textarea class="chrome-plugin-talent-export"></textarea>')
+			.append($import);
 	}
 
 	/**

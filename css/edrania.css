@@ -87,6 +87,11 @@
 	color: #000;
 }
 
+.chrome-plugin-talent-export {
+	width: 100%;
+	height: 300px;
+}
+
 .mb {
 	margin-bottom: 10px;
 }
