@@ -117,7 +117,7 @@ class TalentCalculator
 			const $tr = $('<tr>');
 			const $use = $('<input type="radio" name="useBuild" value="' + key + '"' + useBuildChecked + '>');
 			const $edit = $('<a href="#">Redigera</a>');
-			const $delete = $('<a href="#" style="color: #ff0000;">Radera</a>');
+			const $delete = $('<a class="text-error" href="#">Radera</a>');
 			const $useTd = $('<td style="text-align: center;">');
 			const $editTd = $('<td>');
 			const $deleteTd = $('<td>');
@@ -188,11 +188,29 @@ class TalentCalculator
 			return false;
 		});
 
-		this.main.append($goBack).append('<br>');
+		this.main.append($goBack).append('<br><br>');
 
-		if ($currentLevel > 0) {
-			$prevLevel = $('<a href="#">');
+		if (currentLevel > 0) {
+			const $prevLevel = $('<a class="mr chrome-plugin-talent-btn" href="#">Till grad ' + currentLevel + '</a>');
+			$prevLevel.on('click', () => {
+				this.renderCalculator(build, (currentLevel - 1));
+				return false;
+			});
+
+			this.main.append($prevLevel);
 		}
+
+		const nextLevel = currentLevel + 2;
+		const $nextLevel = $('<a class="chrome-plugin-talent-btn" href="#">Till grad ' + nextLevel + '</a>');
+		$nextLevel.on('click', () => {
+			const nextLevel = (currentLevel + 1);
+			if (build.levels.length === nextLevel) {
+				this.addLevelToBuild(build, this.loadedBuildKey);
+			}
+			this.renderCalculator(build, nextLevel);
+			return false;
+		});
+		this.main.append($nextLevel).append('<br>');
 
 		const $pointsLeft = $('<span>' + maxPoints + '</span>');
 		this.main.append($pointsLeft);
@@ -265,7 +283,7 @@ class TalentCalculator
 			build.levels[currentLevel] = level;
 			this.saveBuild(build, this.loadedBuildKey);
 
-			const $span = $('<span>Sparad</span>');
+			const $span = $('<span class="ml text-success">Sparad</span>');
 			$button.after($span);
 			$span.fadeOut('slow');
 		});

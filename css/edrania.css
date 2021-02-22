@@ -72,6 +72,21 @@
 	width: 60px;
 }
 
+.chrome-plugin-talent-btn {
+	display: inline-block;
+	padding: 2px 4px;
+	border: 1px solid #2f5597;
+	background: #9dc3e6;
+	text-decoration: none;
+	color: #000;
+	margin-bottom: 5px;
+}
+.chrome-plugin-talent-btn:hover {
+	background: #2f5597;
+	text-decoration: underline;
+	color: #000;
+}
+
 .mb {
 	margin-bottom: 10px;
 }
@@ -83,4 +98,10 @@
 }
 .ml {
 	margin-left: 10px;
+}
+.text-success {
+	color: #71b346;
+}
+.text-error {
+	color: #de0002;
 }
