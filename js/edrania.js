@@ -125,9 +125,12 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 		// Highlight player in report
 		const name = getPlayerName();
 		const css = {
-			color: edraniaConfig.duelHighlightColor,
 			'font-weight': 'bold'
 		};
+
+		if (edraniaConfig.highlightWithColor) {
+			css['color'] = edraniaConfig.duelHighlightColor;
+		}
 
 		$('.duelName').filter(function(){
 			return ($(this).text() === name);
