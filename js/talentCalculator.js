@@ -173,8 +173,9 @@ class TalentCalculator
 			$table.append($tr);
 		}
 
-		this.main.append('<h4 class="mt">Dina befintliga</h4>');
-		this.main.append($table);
+		this.main.append('<h4 class="mt">Dina befintliga</h4>')
+			.append('<p>Om du väljer att använda en build så kommer poängen automatiskt att placeras ut när du går upp i grad.</p>')
+			.append($table);
 	}
 
 	/**
@@ -289,7 +290,7 @@ class TalentCalculator
 
 		$pointsLeft.text(pointsLeft);
 
-		const $button = $('<button class="chrome-plugin-btn mt">Spara</button>');
+		const $button = $('<a class="chrome-plugin-btn mt" href="#">Spara</a>');
 		$button.on('click', () => {
 			let level = {};
 
@@ -303,6 +304,7 @@ class TalentCalculator
 			const $span = $('<span class="ml text-success">Sparad</span>');
 			$button.after($span);
 			$span.fadeOut('slow');
+			return false;
 		});
 
 		this.main.append($table).append($button);
@@ -384,7 +386,7 @@ class TalentCalculator
 		});
 
 		this.main.html('<h4>Exportera ' + build.name + '</h4>');
-		this.main.append('<p>Kopiera hela innehållet i textrutan.</p>')
+		this.main.append('<p>Här kan du exportera en build och sedan skicka den till någon annan.<br>Kopiera hela innehållet i textrutan.</p>')
 			.append($copy)
 			.append('<textarea class="chrome-plugin-talent-export">' + JSON.stringify(build) + '</textarea>');
 	}
@@ -394,12 +396,18 @@ class TalentCalculator
 	 */
 	renderImportBuild()
 	{
-		const $import = $('<a class="chrome-plugin-talent-btn" href="#">Importera</a>');
+		const $import = $('<a class="chrome-plugin-btn" href="#">Importera</a>');
 		$import.on('click', () => {
-			const newBuild = JSON.parse($('.chrome-plugin-talent-export').val());
-			this.saveBuild(newBuild, -1);
-			const newKey = this.getAllBuilds().length - 1;
-			this.renderEditBuild(newKey);
+			try {
+				const newBuild = JSON.parse($('.chrome-plugin-talent-export').val());
+				this.saveBuild(newBuild, -1);
+				const newKey = this.getAllBuilds().length - 1;
+				this.renderEditBuild(newKey);
+			}
+			catch(e) {
+				alert('Något gick fel: ' + e.message);
+			}
+
 			return false;
 		});
 
@@ -480,6 +488,11 @@ class TalentCalculator
 	 */
 	createNewBuild(name, race)
 	{
+		if (name.length === 0) {
+			alert('Du måste ange ett namn.');
+			return false;
+		}
+
 		const newBuild = {
 			name: name,
 			race: race,
