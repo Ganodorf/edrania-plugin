@@ -35,7 +35,7 @@ class Challenges
 		// Remove title for challengers
 		$('.compact-table tbody tr').each(function(index, el){
 			const $tr = $(this);
-			
+
 			const $a = $tr.find('td:nth(1) a');
 			$a.attr('title', '');
 		});

@@ -32,6 +32,17 @@ function getPlayerName() {
 	return $('.right-content-bg:nth(1) h5').text();
 }
 
+/**
+ * Round a number to decimals
+ * @param  {float} number
+ * @param  {int}   decimals
+ * @return {float}
+ */
+function round(number, decimals)
+{
+	return parseFloat(number.toFixed(decimals));
+}
+
 // Display how much hp each threshold is
 const playerHP = getPlayerMaxHP();
 $('select[name=RetreatThreshold] option').each(function(){
@@ -53,6 +64,22 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 
 	// Init quick shop for tavern
 	new Tavern();
+
+	// Add button for opening talen calculator
+	const talentCalculator = new TalentCalculator();
+	const $openCalculator = $('<a class="black" href="#">Talent calculator</a>');
+	$openCalculator.on('click', function(){
+		talentCalculator.openCalculator();
+		return false;
+	});
+	const $li = $('<li>');
+	$li.append($openCalculator);
+	$('.side-menu:first .menu-list:first').append($li);
+
+	// Has player leveld up?
+	if ($('#levelUpForm').length) {
+		talentCalculator.placeLevelUp();
+	}
 
 	let path = location.pathname;
 	// Add trailing slash to path if missing
@@ -87,7 +114,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			text = matches[0].replaceAll(/[<>]*/g, '').substr(0, 200);
 		}
 
-		$('.container').after('<div class="chrome-plugin-alert"><b>Plugin:</b><br>' 
+		$('.container').after('<div class="chrome-plugin-alert"><b>Plugin:</b><br>'
 			+ 'Du kan lägga till text i din biografi som du vill visa när någon hovrar över din gladiator.<br>'
 			+ 'Du gör detta genom att lägga till <b>[plugin]Text som ska visas[/plugin]</b> i din biografi.<br>'
 			+ 'Texten som visas är begränsad till 200 tecken.<br><br>'
@@ -98,7 +125,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 		// Highlight player in report
 		const name = getPlayerName();
 		const css = {
-			color: edraniaConfig.duelHighlightColor, 
+			color: edraniaConfig.duelHighlightColor,
 			'font-weight': 'bold'
 		};
 

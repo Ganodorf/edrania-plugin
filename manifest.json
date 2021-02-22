@@ -20,6 +20,12 @@
 				"/js/teamGame.js",
 				"/js/challenges.js",
 				"/js/tavern.js",
+				"/js/talentCalculator.js",
+				"/js/talentCalculator/orc.js",
+				"/js/talentCalculator/troll.js",
+				"/js/talentCalculator/human.js",
+				"/js/talentCalculator/dwarf.js",
+				"/js/talentCalculator/elf.js",
 				"/js/observer.js",
 				"/js/edrania.js"
 			],
