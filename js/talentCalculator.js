@@ -224,7 +224,8 @@ class TalentCalculator
 
 		for (const stat of this.stats) {
 			const $tr = $('<tr>');
-			$tr.append('<th>' + stat.text + '</th>');
+			const statPercent = parseInt((race[stat.stat] * 100) - 100);
+			$tr.append('<th>' + stat.text + '</th><td align="right">' + statPercent + '%</td>');
 
 			let currentPoints = 0;
 			if (build.levels[currentLevel] !== undefined) {
