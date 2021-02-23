@@ -136,4 +136,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			return ($(this).text() === name);
 		}).css(css);
 	}
+	else if (path === '/Workshop/NewProject/') {
+		new Workshop('new');
+	}
 });
