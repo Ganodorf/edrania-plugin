@@ -7,7 +7,7 @@ class Elf
 		this.endurance = 1.5;
 		this.strength = 0.8;
 		this.evasion = 1.6;
-		this.initiative = 1.5;
+		this.initiative = 1.4;
 		this.tactics = 1.1;
 		this.spear = 1.5;
 		this.axe = 1.2;
