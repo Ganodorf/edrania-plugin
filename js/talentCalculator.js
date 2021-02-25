@@ -3,18 +3,18 @@ class TalentCalculator
 	constructor()
 	{
 		this.stats = [
-			{stat: 'health', text: 'Hälsa'},
-			{stat: 'endurance', text: 'Uthållighet'},
-			{stat: 'strength', text: 'Styrka'},
-			{stat: 'evasion', text: 'Undvika anfall'},
-			{stat: 'initiative', text: 'Initiativ'},
-			{stat: 'tactics', text: 'Taktik'},
-			{stat: 'spear', text: 'Spjut'},
-			{stat: 'axe', text: 'Yxa'},
-			{stat: 'sword', text: 'Svärd'},
-			{stat: 'chain', text: 'Kättingvapen'},
-			{stat: 'shield', text: 'Sköld'},
-			{stat: 'hammer', text: 'Hammare'}
+			{stat: 'health', text: 'Hälsa', levelUpInput: 'Stamina'},
+			{stat: 'endurance', text: 'Uthållighet', levelUpInput: 'Endurance'},
+			{stat: 'strength', text: 'Styrka', levelUpInput: 'Strength'},
+			{stat: 'evasion', text: 'Undvika anfall', levelUpInput: 'Dexterity'},
+			{stat: 'initiative', text: 'Initiativ', levelUpInput: 'Initiative'},
+			{stat: 'tactics', text: 'Taktik', levelUpInput: 'Leadership'},
+			{stat: 'spear', text: 'Spjut', levelUpInput: 'Spear'},
+			{stat: 'axe', text: 'Yxa', levelUpInput: 'Axe'},
+			{stat: 'sword', text: 'Svärd', levelUpInput: 'Sword'},
+			{stat: 'chain', text: 'Kättingvapen', levelUpInput: 'Chain'},
+			{stat: 'shield', text: 'Sköld', levelUpInput: 'Shield'},
+			{stat: 'hammer', text: 'Hammare', levelUpInput: 'Hammer'}
 		];
 
 		this.races = [
@@ -604,12 +604,14 @@ class TalentCalculator
 		}
 
 		// Place points
-		$('#levelUpForm input[type=number]').each((key, element) => {
-			const stat = this.stats[key];
+		for (const stat of this.stats) {
+			const $input = $('#' + stat.levelUpInput);
 			const points = level[stat.stat];
-			$(element).val(points);
-			$(element)[0].dispatchEvent(new Event('change'));
-			$(element)[0].dispatchEvent(new Event('keyup'));
-		});
+
+			$input.val(points);
+
+			$input[0].dispatchEvent(new Event('change'));
+			$input[0].dispatchEvent(new Event('keyup'));
+		}
 	}
 }

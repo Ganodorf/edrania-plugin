@@ -76,11 +76,6 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	$li.append($openCalculator);
 	$('.side-menu:first .menu-list:first').append($li);
 
-	// Has player leveld up?
-	if ($('#levelUpForm').length) {
-		talentCalculator.placeLevelUp();
-	}
-
 	let path = location.pathname;
 	// Add trailing slash to path if missing
 	if (path.slice(-1) !== '/') {
@@ -141,5 +136,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	}
 	else if (path === '/Workshop/NewProject/') {
 		new Workshop('new');
+	}
+	else if (path === '/MyGlad/LevelUp/') {
+		talentCalculator.placeLevelUp();
 	}
 });
