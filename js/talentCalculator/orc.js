@@ -6,7 +6,7 @@ class Orc
 		this.health = 1.2;
 		this.endurance = 0.9;
 		this.strength = 1.3;
-		this.evasion = 0.7;
+		this.evasion = 0.8;
 		this.initiative = 1;
 		this.tactics = 0.9;
 		this.spear = 0.9;
