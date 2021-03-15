@@ -134,6 +134,7 @@ class TalentCalculator
 			$use.on('change', () => {
 				if ($use.is(':checked')) {
 					localStorage.setItem('talentCalculatorBuildKey', key);
+					this.placeLevelUp();
 				}
 			});
 
@@ -596,7 +597,12 @@ class TalentCalculator
 		}
 
 		const build = this.getBuild(key);
-		const currentLevel = getPlayerLevel() - 1;
+		let currentLevel = getPlayerLevel() - 1;
+
+		if (isNaN(currentLevel)) {
+			currentLevel = 0;
+		}
+
 		const level = build.levels[currentLevel] || null;
 
 		if (level === null) {
@@ -606,6 +612,10 @@ class TalentCalculator
 		// Place points
 		for (const stat of this.stats) {
 			const $input = $('#' + stat.levelUpInput);
+			if (!$input.length) {
+				continue;
+			}
+
 			const points = level[stat.stat];
 
 			$input.val(points);

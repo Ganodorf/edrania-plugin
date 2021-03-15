@@ -11,7 +11,7 @@ class Human
 		this.tactics = 1.2;
 		this.spear = 1.2;
 		this.axe = 1.2;
-		this.sword = 1.3;
+		this.sword = 1.2;
 		this.chain = 1.1;
 		this.hammer = 1.1;
 		this.shield = 1.3;

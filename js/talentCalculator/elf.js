@@ -5,11 +5,11 @@ class Elf
 		this.name = 'Alv';
 		this.health = 0.9;
 		this.endurance = 1.5;
-		this.strength = 0.8;
+		this.strength = 0.9;
 		this.evasion = 1.6;
 		this.initiative = 1.4;
 		this.tactics = 1.1;
-		this.spear = 1.5;
+		this.spear = 1.3;
 		this.axe = 1.2;
 		this.sword = 1.3;
 		this.chain = 1;
