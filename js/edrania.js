@@ -140,4 +140,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path === '/MyGlad/LevelUp/') {
 		talentCalculator.placeLevelUp();
 	}
+	else if (path === '/CreateGlad/CreateGladSecond/') {
+		$('h3').after($openCalculator);
+		talentCalculator.placeLevelUp();
+	}
 });
