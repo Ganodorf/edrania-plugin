@@ -185,16 +185,20 @@ class HoverInfo
 	renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml)
 	{
 		const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
-		const race = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(3) td').html();
-		const level = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(6) td').html();
+		const mostEvasions = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:nth(2) td:nth(1)').html();
+		const mostBlocks = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:nth(3) td:nth(1)').html();
+		const race = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(4) td').html();
+		const level = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(7) td').html();
 		const items = $(itemsHtml).find('.indent-2');
 		const container = $('<div style="width: 500px;">').append(items);
 
 		container.append(
-			'<div><b>Högsta skada:</b> ' + hardestHit + '</div>');
+			'<div><b>Högsta skada:</b> ' + hardestHit + '</div>' +
+			'<div><b>Mest undvikningar:</b> ' + mostEvasions + '</div>' +
+			'<div><b>Mest pareringar:</b> ' + mostBlocks + '</div>');
 
 		if (race !== undefined) {
-			container.append(
+			container.prepend(
 				'<div><b>Ras:</b> ' + race + ' (grad ' + level + ')</div>');
 		}
 
