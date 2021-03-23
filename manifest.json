@@ -27,6 +27,7 @@
 				"/js/talentCalculator/dwarf.js",
 				"/js/talentCalculator/elf.js",
 				"/js/observer.js",
+				"/js/workDistrict.js",
 				"/js/workshop.js",
 				"/js/edrania.js"
 			],
