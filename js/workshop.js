@@ -55,7 +55,8 @@ class Workshop
 			const roundsLeftArr = $(tr).find('td:nth(2)').text().replace(/[\sa-z]/g, '').split('/');
 			const roundsLeft = parseInt(roundsLeftArr[1]) - parseInt(roundsLeftArr[0]);
 
-			let workRounds = playerRounds;
+			// Rationale: don't use up all available rounds
+			let workRounds = playerRounds - 1;
 			if (roundsLeft < workRounds) {
 				workRounds = roundsLeft;
 			}
