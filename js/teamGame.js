@@ -80,6 +80,7 @@ class TeamGame
 		// Setup observer for changes so we can init hover if anything changes
 		for (let i = 0; i < $('.teamGameTeamContainer').length; i++) {
 			new EdraniaObserver($('.teamGameTeamContainer')[i], () => {
+				hoverInfo.clearCacheTeamGameTeams();
 				hoverInfo.initHover();
 				this.setPlayerReady();
 				this.setPlayerHealthColor();

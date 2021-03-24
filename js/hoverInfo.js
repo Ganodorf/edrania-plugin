@@ -244,7 +244,7 @@ class HoverInfo
 		});
 
 		$.when(...this.teamGameTeamRequests).then((...results) => {
-			this.renderTeamGameTeamBox(results);
+			this.cache[cacheHref] = this.renderTeamGameTeamBox(results);
 		});
 	}
 
@@ -276,6 +276,8 @@ class HoverInfo
 		const html = '<b>Högsta skada i laget:</b> ' + hardestHit;
 
 		this.renderBox(html);
+
+		return html;
 	}
 
 	/**
@@ -284,5 +286,17 @@ class HoverInfo
 	getHardestHit(html)
 	{
 		return $(html).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
+	}
+
+	/**
+	 * Clear cache for team game teams
+	 */
+	clearCacheTeamGameTeams()
+	{
+		for (const key in this.cache) {
+			if (key.search(/\/TeamGame\/[\d]+\/Join/g) > -1) {
+				this.cache[key] = undefined;
+			}
+		}
 	}
 }
