@@ -9,6 +9,7 @@ class HoverInfo
 		this.playerStatisticsRequest = null;
 		this.playerProfileRequest = null;
 		this.hoverTimeout = null;
+		this.teamGameTeamRequests = [];
 
 		// Init hover
 		this.initHover();
@@ -40,6 +41,10 @@ class HoverInfo
 			}
 			if (this.playerProfileRequest !== null) {
 				this.playerProfileRequest.abort();
+			}
+
+			for (const request of this.teamGameTeamRequests) {
+				request.abort();
 			}
 
 			$('.chrome-plugin-info-box').remove();
@@ -77,6 +82,9 @@ class HoverInfo
 			type = 'player';
 			href += '/Arsenal'
 		}
+		else if (href.search(/\/TeamGame\/[\d]+\/Join/g) > -1 && edraniaConfig.hoverPlayerActive) {
+			type = 'teamGameTeam';
+		}
 
 		if (type === '') {
 			return false;
@@ -97,6 +105,9 @@ class HoverInfo
 
 				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml);
 			});
+		}
+		else if (type === 'teamGameTeam') {
+			this.loadTeamGameTeam($a, cacheHref);
 		}
 		else {
 			this.ajaxRequest = $.get(href, (html) => {
@@ -184,7 +195,7 @@ class HoverInfo
 	 */
 	renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml)
 	{
-		const hardestHit = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
+		const hardestHit = this.getHardestHit(statisticsHtml);
 		const mostEvasions = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:nth(2) td:nth(1)').html();
 		const mostBlocks = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:nth(3) td:nth(1)').html();
 		const race = $(profileHtml).find('.col-lg-12 .container table tbody tr:nth(4) td').html();
@@ -217,5 +228,75 @@ class HoverInfo
 		this.renderBox(container);
 
 		return container;
+	}
+
+	/**
+	 * Load team game team highest damage
+	 */
+	loadTeamGameTeam($a, cacheHref)
+	{
+		const $ul = $a.parent().find('ul');
+		this.teamGameTeamRequests = [];
+
+		$ul.find('li').each((index, element) => {
+			const href = $(element).find('a').attr('href') + '/Stats';
+			this.teamGameTeamRequests.push($.get(href));
+		});
+
+		$.when(...this.teamGameTeamRequests).then((...results) => {
+			this.cache[cacheHref] = this.renderTeamGameTeamBox(results);
+		});
+	}
+
+	/**
+	 * Render team game team hardest hit
+	 */
+	renderTeamGameTeamBox(results)
+	{
+		let hardestHit = 0;
+
+		// 0 is an array if there are more than one member in the team
+		if (Array.isArray(results[0])) {
+			for (const result of results) {
+				const hit = this.getHardestHit(result[0]);
+
+				if (hit > hardestHit) {
+					hardestHit = hit;
+				}
+			}
+		}
+		else {
+			hardestHit = this.getHardestHit(results[0]);
+		}
+
+		if (hardestHit === undefined) {
+			hardestHit = 0;
+		}
+
+		const html = '<b>Högsta skada i laget:</b> ' + hardestHit;
+
+		this.renderBox(html);
+
+		return html;
+	}
+
+	/**
+	 * Get hardest hit from html
+	 */
+	getHardestHit(html)
+	{
+		return $(html).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
+	}
+
+	/**
+	 * Clear cache for team game teams
+	 */
+	clearCacheTeamGameTeams()
+	{
+		for (const key in this.cache) {
+			if (key.search(/\/TeamGame\/[\d]+\/Join/g) > -1) {
+				this.cache[key] = undefined;
+			}
+		}
 	}
 }
