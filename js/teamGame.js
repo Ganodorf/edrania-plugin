@@ -82,10 +82,12 @@ class TeamGame
 			new EdraniaObserver($('.teamGameTeamContainer')[i], () => {
 				hoverInfo.initHover();
 				this.setPlayerReady();
+				this.setPlayerHealthColor();
 			});
 		}
 
 		this.setPlayerReady();
+		this.setPlayerHealthColor();
 	}
 
 	/**
@@ -120,5 +122,24 @@ class TeamGame
 				$('a[href="' + toggleURL + '"]').text('Redo');
 			});
 		}
+	}
+
+	/**
+	 * Update colors on players health
+	 */
+	setPlayerHealthColor()
+	{
+		$('span[id^="healthIndicator"').each(function(){
+			const health = $(this).text();
+			if (health === 'Frisk') {
+				$(this).css('color', '#008000');
+			}
+			else if (health === 'Skråmor') {
+				$(this).css('color', '#ff9624');
+			}
+			else {
+				$(this).css('color', '#ff0000');
+			}
+		});
 	}
 }
