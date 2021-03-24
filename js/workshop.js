@@ -63,7 +63,7 @@ class Workshop
 
 			const $td = $('<td>');
 			const $input = $('<input type="number" value="' + workRounds + '" max="' + workRounds + '" min="0" style="width: 60px; margin-right: 5px;">');
-			const $workBtn = $('<a href="#">Jobba</a>');
+			const $workBtn = $('<a href="#" class="fat">Jobba</a>');
 
 			const workID = $(tr).find('td:nth(4) a').attr('href').replace(/[\D]/g, '');
 
