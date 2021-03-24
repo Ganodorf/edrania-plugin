@@ -1,6 +1,6 @@
 {
 	"name": "Edrania",
-	"version": "1.5.4",
+	"version": "1.6",
 	"description": "Edrania plugin.",
 	"manifest_version": 2,
 	"permissions": [
@@ -27,6 +27,7 @@
 				"/js/talentCalculator/dwarf.js",
 				"/js/talentCalculator/elf.js",
 				"/js/observer.js",
+				"/js/workDistrict.js",
 				"/js/workshop.js",
 				"/js/edrania.js"
 			],

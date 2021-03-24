@@ -127,9 +127,15 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			css['color'] = edraniaConfig.duelHighlightColor;
 		}
 
-		$('.duelName').filter(function(){
-			return ($(this).text() === name);
-		}).css(css);
+		$("#centerContent")
+			.find(".duelName, .fat, b")
+			.filter(function () {
+				return $(this).text() === name;
+			})
+			.css(css);
+	}
+	else if (path.startsWith('/Work/')) {
+		new WorkDistrict();
 	}
 	else if (path === '/Workshop/') {
 		new Workshop('list');
