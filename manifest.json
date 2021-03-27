@@ -17,6 +17,7 @@
 				"/js/prefill.js",
 				"/js/hoverInfo.js",
 				"/js/auction.js",
+				"/js/vendor.js",
 				"/js/teamGame.js",
 				"/js/challenges.js",
 				"/js/tavern.js",
