@@ -85,6 +85,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	if (path === '/Auction/') {
 		new Auction();
 	}
+	else if (path.startsWith('/Vendor/Browse/') && edraniaConfig.purchaseEquipmentWithoutConfirm) {
+		new Vendor();
+	}
 	else if (path === '/TeamGame/') {
 		new TeamGame('list');
 	}
