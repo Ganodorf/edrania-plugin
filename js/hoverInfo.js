@@ -51,8 +51,8 @@ class HoverInfo
 		})
 		.on('mousemove', (event) => {
 			// Update position of info box
-			this.mouseX = event.pageX;
-			this.mouseY = event.pageY;
+			this.mouseX = event.clientX;
+			this.mouseY = event.clientY;
 			this.setBoxPosition();
 		});
 	}
@@ -62,8 +62,8 @@ class HoverInfo
 	 */
 	hover(event)
 	{
-		this.mouseX = event.pageX;
-		this.mouseY = event.pageY;
+		this.mouseX = event.clientX;
+		this.mouseY = event.clientY;
 
 		const $a = $(event.currentTarget);
 		let href = $a.attr('href');
@@ -140,19 +140,33 @@ class HoverInfo
 	 */
 	setBoxPosition()
 	{
-		const $div = $('.chrome-plugin-info-box');
+		const $box = $('.chrome-plugin-info-box');
+		const boxHeight = $box.height();
+		const boxWidth = $box.width();
 		let top = this.mouseY + 20;
 		let left = this.mouseX + 20;
 
-		if (this.mouseY + $div.height() + 20 > window.innerHeight) {
-			top = this.mouseY - $div.height() - 20;
-			left = this.mouseX - $div.width() - 20;
+		// Outside viewport bottom? Flip vertical position.
+		if (top + boxHeight > window.innerHeight - 20) {
+			top = this.mouseY - boxHeight - 20;
 		}
 
-		$div.css({
-			'top': top,
-			'left': left
-		})
+		// Too close to the viewport top? Flip again, but ensure inside viewport.
+		if (top < 20) {
+			top = this.mouseY - (this.mouseY + boxHeight - window.innerHeight) - 20;
+		}
+
+		// Outside viewport right? Flip horizontal position.
+		if (left + boxWidth > window.innerWidth - 20) {
+			left = this.mouseX - boxWidth - 20;
+		}
+
+		// Too close to the viewport left? Flip again, but ensure inside viewport.
+		if (left < 20) {
+			left = this.mouseX - (this.mouseX + boxWidth - window.innerWidth) - 20;
+		}
+
+		$box.css({ top, left })
 	}
 
 	/**

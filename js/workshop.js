@@ -56,18 +56,16 @@ class Workshop
 			const roundsLeft = parseInt(roundsLeftArr[1]) - parseInt(roundsLeftArr[0]);
 
 			// Rationale: don't use up all available rounds
-			let workRounds = playerRounds - 1;
-			if (roundsLeft < workRounds) {
-				workRounds = roundsLeft;
-			}
+			const workRounds = Math.min(playerRounds - 1, roundsLeft);
+			const maxRounds = Math.min(playerRounds, roundsLeft);
 
 			const $td = $('<td>');
-			const $input = $('<input type="number" value="' + workRounds + '" max="' + workRounds + '" min="0" style="width: 60px; margin-right: 5px;">');
-			const $workBtn = $('<a href="#">Jobba</a>');
+			const $input = $('<input type="number" value="' + workRounds + '" max="' + maxRounds + '" min="0" style="width: 60px; margin-right: 5px;">');
+			const $workBtn = $('<a href="#" class="fat">Jobba</a>');
 
 			const workID = $(tr).find('td:nth(4) a').attr('href').replace(/[\D]/g, '');
 
-			$workBtn.on('click', () => {
+			const work = () => {
 				const data = {
 					ID: workID,
 					RoundsToCommit: $input.val()
@@ -82,6 +80,13 @@ class Workshop
 				});
 
 				return false;
+			};
+
+			$workBtn.on('click', work);
+			$input.on('keydown', (event) => {
+				if (event.key === "Enter") {
+					return work();
+				}
 			});
 
 			$td.append($input).append($workBtn);
