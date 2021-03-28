@@ -2,6 +2,8 @@ class TeamGame
 {
 	constructor(action)
 	{
+		this.setPlayerReadyRequest = null;
+
 		switch (action) {
 			case 'create':
 				this.initPrefill();
@@ -110,17 +112,29 @@ class TeamGame
 	 */
 	setPlayerReady()
 	{
-		if (!edraniaConfig.teamGameAutoReady || !this.isPlayerInGame()) {
+		if (
+			!edraniaConfig.teamGameAutoReady ||
+			!this.isPlayerInGame() ||
+			this.setPlayerReadyRequest !== null
+		) {
 			return;
 		}
 
 		const gameID = location.pathname.split('/')[3];
 		const toggleURL = '/TeamGame/' + gameID + '/ToggleReadyState';
-		const readyState = $('a[href="' + toggleURL + '"]').text();
 
-		if (readyState !== 'Redo' && readyState !== 'Ready') {
-			$.get(toggleURL, () => {
-				$('a[href="' + toggleURL + '"]').text('Redo');
+		const isPlayerReady = () => {
+			const readyState = $('a[href="' + toggleURL + '"]').text();
+			return readyState === 'Redo' || readyState === 'Ready';
+		}
+
+		if (!isPlayerReady()) {
+			this.setPlayerReadyRequest = $.get(toggleURL, () => {
+				if (!isPlayerReady()) {
+					$('a[href="' + toggleURL + '"]').text("Redo");
+				}
+			}).always(() => {
+				this.setPlayerReadyRequest = null;
 			});
 		}
 	}
