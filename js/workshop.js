@@ -65,7 +65,7 @@ class Workshop
 
 			const workID = $(tr).find('td:nth(4) a').attr('href').replace(/[\D]/g, '');
 
-			$workBtn.on('click', () => {
+			const work = () => {
 				const data = {
 					ID: workID,
 					RoundsToCommit: $input.val()
@@ -80,6 +80,13 @@ class Workshop
 				});
 
 				return false;
+			};
+
+			$workBtn.on('click', work);
+			$input.on('keydown', (event) => {
+				if (event.key === "Enter") {
+					return work();
+				}
 			});
 
 			$td.append($input).append($workBtn);
