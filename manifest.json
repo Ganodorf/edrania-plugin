@@ -20,6 +20,8 @@
 				"/js/vendor.js",
 				"/js/teamGame.js",
 				"/js/challenges.js",
+				"/js/duelReport.js",
+				"/js/profile.js",
 				"/js/tavern.js",
 				"/js/talentCalculator.js",
 				"/js/talentCalculator/orc.js",
