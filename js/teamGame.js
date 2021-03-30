@@ -58,7 +58,7 @@ class TeamGame
 							const levels = $tr.find('td:nth(2)').text().split(' - ');
 							const playerLevel = getPlayerLevel();
 
-							if (parseInt(levels[0]) > playerLevel || parseInt(levels[1]) < playerLevel) {
+							if (parseInteger(levels[0]) > playerLevel || parseInteger(levels[1]) < playerLevel) {
 								$tr.hide();
 							}
 							else {

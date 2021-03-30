@@ -30,9 +30,9 @@ class Workshop
 
 			hoverInfo.initHover();
 
-			const startCost = parseInt($('#selectedProjectPrice').text().replace(/[\D]/g, ''));
-			const rounds = parseInt($('#selectedProjectTimeToCreate').text().replace(/[\D]/g, ''));
-			const roundCost = parseInt(rounds * 0.28);
+			const startCost = parseInteger($('#selectedProjectPrice').text().replace(/[\D]/g, ''));
+			const rounds = parseInteger($('#selectedProjectTimeToCreate').text().replace(/[\D]/g, ''));
+			const roundCost = parseInteger(rounds * 0.28);
 			const totalCost = startCost + roundCost;
 
 			$('#selectedProjectTimeToCreate').append(' (' + roundCost + ' mynt)')
@@ -53,7 +53,7 @@ class Workshop
 		$('.table-body-border:first tr').each((key, tr) => {
 			// Check how many rounds are left to complete
 			const roundsLeftArr = $(tr).find('td:nth(2)').text().replace(/[\sa-z]/g, '').split('/');
-			const roundsLeft = parseInt(roundsLeftArr[1]) - parseInt(roundsLeftArr[0]);
+			const roundsLeft = parseInteger(roundsLeftArr[1]) - parseInteger(roundsLeftArr[0]);
 
 			// Rationale: don't use up all available rounds
 			const workRounds = Math.min(playerRounds - 1, roundsLeft);

@@ -9,7 +9,7 @@ class Tavern
 		$quickShop.append('<a class="js-tavern-buy black" href="#" data-action="/Tavern/Purchase/1/">Äpple 5sm (5hp)</a><br>');
 
 		const playerHP = getPlayerMaxHP();
-		const loafHeal = parseInt(playerHP * 0.1);
+		const loafHeal = parseInteger(playerHP * 0.1);
 		$quickShop.append('<a class="js-tavern-buy black" href="#" data-action="/Tavern/Purchase/3/">Bröd 20sm (' + loafHeal + 'hp)</a>');
 
 		$('.side-menu:first').append($quickShop);

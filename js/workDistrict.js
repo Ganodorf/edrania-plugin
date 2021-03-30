@@ -10,7 +10,7 @@ class WorkDistrict
 		$('#Time option').each(function () {
 			const $option = $(this);
 			$option.append(
-				` (${Math.floor(parseInt($option.text(), 10) * 0.28)} sm)`
+				` (${Math.floor(parseInteger($option.text()) * 0.28)} sm)`
 			);
 		})
 	}

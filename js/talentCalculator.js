@@ -184,7 +184,7 @@ class TalentCalculator
 	 */
 	renderCalculator(build, currentLevel)
 	{
-		currentLevel = parseInt(currentLevel);
+		currentLevel = parseInteger(currentLevel);
 		const race = this.getRaceClass(build.race);
 		if (!race) {
 			return;
@@ -242,7 +242,7 @@ class TalentCalculator
 
 		for (const stat of this.stats) {
 			const $tr = $('<tr>');
-			const statPercent = parseInt((race[stat.stat] * 100) - 100);
+			const statPercent = parseInteger((race[stat.stat] * 100) - 100);
 			$tr.append('<th>' + stat.text + '</th><td align="right">' + statPercent + '%</td>');
 
 			let currentPoints = 0;
@@ -296,7 +296,7 @@ class TalentCalculator
 			let level = {};
 
 			$('.js-points').each((key, input) => {
-				level[$(input).attr('name')] = parseInt($(input).val());
+				level[$(input).attr('name')] = parseInteger($(input).val());
 			});
 
 			build.levels[currentLevel] = level;
@@ -323,7 +323,7 @@ class TalentCalculator
 		$levelTable.append('<tr><th>Grad</th><th>Spenderade poäng</th><th>Redigera</th></tr>');
 
 		for (let key in build.levels) {
-			const level = parseInt(key) + 1;
+			const level = parseInteger(key) + 1;
 
 			let spendedPoints = 0;
 			const maxPoints = level === 1 ? this.attributePointsStart : this.attributePointsPerLevel;
@@ -449,7 +449,7 @@ class TalentCalculator
 	{
 		let points = 0;
 		$('.js-points').each(function(){
-			points += parseInt($(this).val());
+			points += parseInteger($(this).val());
 		});
 
 		return points;
