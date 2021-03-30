@@ -299,7 +299,7 @@ class HoverInfo
 	 */
 	getHardestHit(html)
 	{
-		return $(html).find('.compact-table:nth(2) tbody tr:first td:nth(1)').html();
+		return parseInteger($(html).find('.compact-table:nth(2) tbody tr:first td:nth(1)').text());
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * @return {int}
  */
 function getPlayerLevel() {
-	return parseInt($('#gladStatus table tbody tr:nth(1) td').text());
+	return parseInteger($('#gladStatus table tbody tr:nth(1) td').text());
 }
 
 /**
@@ -13,7 +13,7 @@ function getPlayerLevel() {
 function getPlayerMaxHP() {
 	const hp = $('#gladStatus table tbody tr:nth(0) td').text();
 	const hpArr = hp.split('/');
-	return parseInt(hpArr[1]);
+	return parseInteger(hpArr[1]);
 }
 
 /**
@@ -21,7 +21,7 @@ function getPlayerMaxHP() {
  * @return {int}
  */
 function getPlayerTime() {
-	return parseInt($('#gladStatus table tbody tr:nth(3) td').text());
+	return parseInteger($('#gladStatus table tbody tr:nth(3) td').text());
 }
 
 /**
@@ -43,11 +43,23 @@ function round(number, decimals)
 	return parseFloat(number.toFixed(decimals));
 }
 
+/**
+ * Parse integer from string, explicitly using base 10, as is good practice.
+ *
+ * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInteger
+ *
+ * @param  {string} value
+ * @return {int}
+ */
+ function parseInteger(value) {
+	return parseInt(value, 10);
+}
+
 // Display how much hp each threshold is
 const playerHP = getPlayerMaxHP();
 $('select[name=RetreatThreshold] option').each(function(){
-	const value = parseInt($(this).val());
-	const thresholdHP = parseInt(playerHP * (value / 100));
+	const value = parseInteger($(this).val());
+	const thresholdHP = parseInteger(playerHP * (value / 100));
 	$(this).append(' (' + thresholdHP + ' hp)');
 });
 
