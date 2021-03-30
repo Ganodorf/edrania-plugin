@@ -51,8 +51,14 @@ function round(number, decimals)
  * @param  {string} value
  * @return {int}
  */
- function parseInteger(value) {
+function parseInteger(value) 
+{
 	return parseInt(value, 10);
+}
+
+function refreshPlayerStatus()
+{
+	$('#gladStatus').trigger('click');
 }
 
 // Display how much hp each threshold is
