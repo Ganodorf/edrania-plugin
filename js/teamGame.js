@@ -84,13 +84,18 @@ class TeamGame
 			new EdraniaObserver($('.teamGameTeamContainer')[i], () => {
 				hoverInfo.clearCacheTeamGameTeams();
 				hoverInfo.initHover();
-				this.setPlayerReady();
-				this.setPlayerHealthColor();
+				this.updateViewGame();
 			});
 		}
 
+		this.updateViewGame();
+	}
+
+	updateViewGame()
+	{
 		this.setPlayerReady();
 		this.setPlayerHealthColor();
+		this.ensureTeamCountIsCorrect();
 	}
 
 	/**
@@ -157,4 +162,20 @@ class TeamGame
 			}
 		});
 	}
+
+	/**
+	 * The team count becomes out-of-sync every now and then. If so, fix it.
+	 */
+	 ensureTeamCountIsCorrect()
+	 {
+		 $('.teamGameTeamContainer').each(function () {
+			const $container = $(this);
+			const $count = $container.find('[id^="memberCount"]');
+			const count = $container.find('[id^="memberRow"]').length;
+
+			if (count !== parseInteger($count.text())) {
+				$count.text(count);
+			}
+		 });
+	 }
 }
