@@ -71,6 +71,9 @@ class TeamGame
 								$tr.show();
 							}
 						});
+
+						// Remove superfluous divider, mainly to avoid showing adjacent dividers.
+						$('.compact-table:first tbody tr:empty:first').hide();
 					}
 					else {
 						$('.compact-table:first tbody tr').show();
