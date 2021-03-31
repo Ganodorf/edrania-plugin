@@ -56,11 +56,6 @@ function parseInteger(value)
 	return parseInt(value, 10);
 }
 
-function refreshPlayerStatus()
-{
-	$('#gladStatus').trigger('click');
-}
-
 // Display how much hp each threshold is
 const playerHP = getPlayerMaxHP();
 $('select[name=RetreatThreshold] option').each(function(){
@@ -80,6 +75,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init hover info for links
 	hoverInfo = new HoverInfo();
 
+	playerStatus = new PlayerStatus();
+  
 	// Profile client
 	profile = new Profile();
 
@@ -138,7 +135,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			+ 'Du gör detta genom att lägga till <b>[plugin]Text som ska visas[/plugin]</b> i din biografi.<br>'
 			+ 'Texten som visas är begränsad till 200 tecken.<br><br>'
 			+ '<b>Text som kommer att visas:</b><br>' + text
-			+'</div>');
+			+ '</div>');
 	}
 	else if (path.startsWith('/Duel/Reports/')) {
 		new DuelReport();
