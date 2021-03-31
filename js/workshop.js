@@ -56,7 +56,7 @@ class Workshop
 			const roundsLeft = parseInteger(roundsLeftArr[1]) - parseInteger(roundsLeftArr[0]);
 
 			// Rationale: don't use up all available rounds
-			const workRounds = Math.min(playerRounds - 1, roundsLeft);
+			const workRounds = Math.max(Math.min(playerRounds - 1, roundsLeft), 0);
 			const maxRounds = Math.min(playerRounds, roundsLeft);
 
 			const $td = $('<td>');

@@ -23,9 +23,7 @@ class Tavern
 	{
 		const action = $(this).data('action');
 
-		$.post(action, () => {
-			$('#gladStatus').trigger('click');
-		});
+		$.post(action, refreshPlayerStatus);
 
 		return false;
 	}

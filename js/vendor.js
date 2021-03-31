@@ -14,9 +14,7 @@ class Vendor
 			$purchaseButton.on('click', (event) => {
 				event.preventDefault();
 
-				$.post('/Vendor/PurchaseItem/', { ItemID: itemID }, () => {
-					location.reload();
-				});
+				$.post('/Vendor/PurchaseItem/', { ItemID: itemID }, refreshPlayerStatus);
 			});
 		})
 	}

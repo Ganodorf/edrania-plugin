@@ -1,3 +1,9 @@
+
+const ReadyStateIcon = Object.freeze({
+	Ready: "⚔️",
+	NotReady: "🛡️"
+});
+
 class TeamGame
 {
 	constructor(action)
@@ -91,29 +97,120 @@ class TeamGame
 		this.updateViewGame();
 	}
 
+	/**
+	 * Get current game ID
+	 * @return {string}
+	 */
+	getGameID()
+	{
+		return location.pathname.split('/').pop();
+	}
+
+	getToggleReadyStateURL()
+	{
+		return `/TeamGame/${this.getGameID()}/ToggleReadyState`;
+	}
+
+	getPlayerReadyStateElement()
+	{
+		return $(`a[href="${this.getToggleReadyStateURL()}"]`);
+	}
+
+	/**
+	 * Check if player is set as ready
+	 * @return {boolean}
+	 */
+	isPlayerReady() 
+	{
+		return this.isReady(this.getPlayerReadyStateElement().text());
+	}
+
+	/**
+	 * Check if ready state is set to "Ready"
+	 * @return {boolean}
+	 */
+	isReady(readyState)
+	{
+		const normalizedReadyState = readyState.replace(/[()]/g, '');
+		return ["Redo", "Ready"].some((state) =>
+			normalizedReadyState.startsWith(state)
+		);
+	}
+
+	/**
+	 * Enhance team game view
+	 */
 	updateViewGame()
 	{
 		this.setPlayerReady();
-		this.setPlayerHealthColor();
-		this.ensureTeamCountIsCorrect();
+		this.setPlayersReadyState();
+		this.setPlayersHealthColor();
+    this.ensureTeamCountIsCorrect();
+	}
+
+	/**
+	 * Check if ready state has state icon
+	 * @return {boolean}
+	 */
+	hasReadyStateIcon(readyState)
+	{
+		return Object.values(ReadyStateIcon).some((icon) =>
+			readyState.includes(icon)
+		);
+	}
+
+	/**
+	 * Convert ready state to corresponding icon
+	 * @return {string}
+	 */
+	toReadyStateIcon(readyState)
+	{
+		return this.isReady(readyState)
+			? ReadyStateIcon.Ready
+			: ReadyStateIcon.NotReady;
+	}
+
+	/**
+	 * 1. Show "Not ready" instead of nothing
+	 * 2. Append state icons for better scanability
+	 */
+	setPlayersReadyState()
+	{
+		// Set own state icon
+		const $readyState = this.getPlayerReadyStateElement();
+		const readyState = $readyState.text();
+		if (!this.hasReadyStateIcon(readyState)) {
+			$readyState.append(` ${this.toReadyStateIcon(readyState)}`);
+		}
+
+		// Enhance the other players' state
+		$('span[id^=foreignReadyState]').each((_, element) => {
+			const $readyState = $(element);
+			const readyState = $readyState.text();
+			if (this.hasReadyStateIcon(readyState)) {
+				return;
+			}
+
+			if (this.isReady(readyState)) {
+				$readyState.text(`(Redo ${ReadyStateIcon.Ready})`);
+			}
+			else {
+				$readyState.text(`(Ej redo ${ReadyStateIcon.NotReady})`);
+			}
+		});
 	}
 
 	/**
 	 * Check if player is in the game
-	 * @return {bool}
+	 * @return {boolean}
 	 */
 	isPlayerInGame()
 	{
-		const gameID = location.pathname.split('/')[3];
-		if ($('a[href="/TeamGame/' + gameID + '/ToggleReadyState"]').length > 0) {
-			return true;
-		}
-
-		return false;
+		return this.getPlayerReadyStateElement().length > 0;
 	}
 
 	/**
-	 * Check if player is ready and if not set player as ready
+	 * Ensure player is set as ready
 	 */
 	setPlayerReady()
 	{
@@ -125,29 +222,24 @@ class TeamGame
 			return;
 		}
 
-		const gameID = location.pathname.split('/')[3];
-		const toggleURL = '/TeamGame/' + gameID + '/ToggleReadyState';
-
-		const isPlayerReady = () => {
-			const readyState = $('a[href="' + toggleURL + '"]').text();
-			return readyState === 'Redo' || readyState === 'Ready';
-		}
-
-		if (!isPlayerReady()) {
-			this.setPlayerReadyRequest = $.get(toggleURL, () => {
-				if (!isPlayerReady()) {
-					$('a[href="' + toggleURL + '"]').text("Redo");
+		if (!this.isPlayerReady()) {
+			this.setPlayerReadyRequest = $.get(
+				this.getToggleReadyStateURL(),
+				() => {
+					if (!this.isPlayerReady()) {
+						this.getPlayerReadyStateElement().text("Redo");
+					}
 				}
-			}).always(() => {
+			).always(() => {
 				this.setPlayerReadyRequest = null;
 			});
 		}
 	}
 
 	/**
-	 * Update colors on players health
+	 * Update colors on players' health
 	 */
-	setPlayerHealthColor()
+	setPlayersHealthColor()
 	{
 		$('span[id^="healthIndicator"').each(function(){
 			const health = $(this).text();
