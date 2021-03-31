@@ -123,7 +123,7 @@ class TeamGame
 	 * Check if player is set as ready
 	 * @return {boolean}
 	 */
-	isPlayerReady() 
+	isPlayerReady()
 	{
 		return this.isReady(this.getPlayerReadyStateElement().text());
 	}
@@ -148,7 +148,7 @@ class TeamGame
 		this.setPlayerReady();
 		this.setPlayersReadyState();
 		this.setPlayersHealthColor();
-    this.ensureTeamCountIsCorrect();
+		this.ensureTeamCountIsCorrect();
 	}
 
 	/**
