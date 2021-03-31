@@ -2,6 +2,7 @@ class Vendor
 {
 	constructor()
 	{
+		this.purchaseRequest = null;
 		this.initPurchaseEquipmentWithoutConfirm();
 	}
 
@@ -14,10 +15,27 @@ class Vendor
 			$purchaseButton.on('click', (event) => {
 				event.preventDefault();
 
-				$.post('/Vendor/PurchaseItem/', { ItemID: itemID }, () => {
-					location.reload();
+				if (this.purchaseRequest !== null) {
+					return;
+				}
+
+				this.purchaseRequest = $.post('/Vendor/PurchaseItem/', {ItemID: itemID}, () => {
+					this.purchaseSuccess($purchaseButton);
+				}).always(() => {
+					this.purchaseRequest = null;
 				});
 			});
 		})
+	}
+
+	purchaseSuccess($purchaseButton)
+	{
+		playerStatus.refresh();
+
+		const $span = $('<b class="text-success">Köpte</b>');
+		$purchaseButton.hide().after($span);
+		$span.fadeOut(1000, function() {
+			$purchaseButton.show();
+		});
 	}
 }

@@ -17,14 +17,14 @@ class Tavern
 	}
 
 	/**
-	 * Buy a item
+	 * Buy an item
 	 */
 	buyItem()
 	{
 		const action = $(this).data('action');
 
 		$.post(action, () => {
-			$('#gladStatus').trigger('click');
+			playerStatus.refresh();
 		});
 
 		return false;
