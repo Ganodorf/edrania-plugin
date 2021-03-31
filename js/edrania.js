@@ -74,6 +74,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init hover info for links
 	hoverInfo = new HoverInfo();
 
+	// Profile client
+	profile = new Profile();
+
 	// Init quick shop for tavern
 	new Tavern();
 
@@ -131,23 +134,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			+ '<b>Text som kommer att visas:</b><br>' + text
 			+'</div>');
 	}
-	else if (path.search('/Duel/Reports/') > -1 && edraniaConfig.highlightInDuels) {
-		// Highlight player in report
-		const name = getPlayerName();
-		const css = {
-			'font-weight': 'bold'
-		};
-
-		if (edraniaConfig.highlightWithColor) {
-			css['color'] = edraniaConfig.duelHighlightColor;
-		}
-
-		$("#centerContent")
-			.find(".duelName, .fat, b")
-			.filter(function () {
-				return $(this).text() === name;
-			})
-			.css(css);
+	else if (path.startsWith('/Duel/Reports/')) {
+		new DuelReport();
 	}
 	else if (path.startsWith('/Work/')) {
 		new WorkDistrict();
