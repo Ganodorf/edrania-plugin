@@ -78,7 +78,7 @@ class HoverInfo
 		else if (href === '/MyGlad/Profile/Attributes' && edraniaConfig.hoverAttributesActive) {
 			type = 'attributes';
 		}
-		else if (href.search('/Profile/View/') > -1 && edraniaConfig.hoverPlayerActive) {
+		else if (/\/Profile\/View\/\d+$/.test(href) && edraniaConfig.hoverPlayerActive) {
 			type = 'player';
 			href += '/Arsenal'
 		}
