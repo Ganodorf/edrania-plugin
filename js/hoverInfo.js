@@ -283,7 +283,7 @@ class HoverInfo
 			hardestHit = this.getHardestHit(results[0]);
 		}
 
-		if (hardestHit === undefined) {
+		if (typeof hardestHit === "undefined" || Number.isNaN(hardestHit)) {
 			hardestHit = 0;
 		}
 
