@@ -33,6 +33,7 @@
 				"/js/observer.js",
 				"/js/workDistrict.js",
 				"/js/workshop.js",
+				"/js/searchGladiator.js",
 				"/js/edrania.js"
 			],
 			"css": [

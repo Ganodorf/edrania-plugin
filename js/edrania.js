@@ -149,6 +149,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path === '/Workshop/NewProject/') {
 		new Workshop('new');
 	}
+	else if (path.startsWith('/Search/Gladiator/')) {
+		new SearchGladiator();
+	}
 	else if (path === '/MyGlad/LevelUp/') {
 		talentCalculator.placeLevelUp();
 	}
