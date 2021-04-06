@@ -109,14 +109,9 @@ class TeamGame
 		return location.pathname.split('/').pop();
 	}
 
-	getToggleReadyStateURL()
-	{
-		return `/TeamGame/${this.getGameID()}/ToggleReadyState`;
-	}
-
 	getPlayerReadyStateElement()
 	{
-		return $(`a[href="${this.getToggleReadyStateURL()}"]`);
+		return $(`a[href="/TeamGame/${this.getGameID()}/ToggleReadyState"]`);
 	}
 
 	/**
@@ -226,8 +221,9 @@ class TeamGame
 		}
 
 		if (!this.isPlayerReady()) {
-			this.setPlayerReadyRequest = $.get(
-				this.getToggleReadyStateURL(),
+			this.setPlayerReadyRequest = $.post(
+				'/TeamGame/ToggleReadyState',
+				{ data: this.getGameID() },
 				() => {
 					if (!this.isPlayerReady()) {
 						this.getPlayerReadyStateElement().text("Redo");
