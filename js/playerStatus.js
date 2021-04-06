@@ -5,6 +5,7 @@ class PlayerStatus
 		this.refreshTimeoutId = null;
 
 		this.initAutoUpdateOnCharge();
+		this.initHealthStatusTooltip();
 	}
 
 	refresh()
@@ -19,6 +20,80 @@ class PlayerStatus
 		const secondsLeft = 60 - currentDate.getSeconds();
 
 		return 1000 * (60 * minutesLeft + secondsLeft);
+	}
+
+	toHealthStatusLabel(healhPercentage)
+	{
+		if (healhPercentage < 11) {
+			return "Kritisk";
+		}
+		if (healhPercentage < 40) {
+			return "Allvarligt skadad";
+		}
+		if (healhPercentage < 60) {
+			return "Halvskadad";
+		}
+		if (healhPercentage < 90) {
+			return "Lätt skadad";
+		}
+		if (healhPercentage < 100) {
+			return "Skråmor";
+		}
+		
+		return "Frisk";
+	}
+
+	calculateChargesUntilFullHealth(healthPercentage)
+	{
+		if (healthPercentage < 30) {
+			return 3;
+		}
+		if (healthPercentage < 65) {
+			return 2;
+		}
+		if (healthPercentage < 100) {
+			return 1;
+		}
+
+		return 0;
+	}
+
+	updateHealthStatusTooltip()
+	{
+		const $healthStatus = $('#gladStatHealth');
+		const healthStatus = $healthStatus.text();
+		const [currentHealth, maxHealth] = healthStatus.split('/').map(parseInteger);
+		const healthPercentage = 100 * currentHealth / maxHealth;
+		const healthStatusLabel = this.toHealthStatusLabel(healthPercentage);
+		const titleParts = [healthStatusLabel];
+
+		if (healthPercentage < 100) {
+			const chargesUntilFullHealth =
+				this.calculateChargesUntilFullHealth(healthPercentage);
+			const fullHealthDate = new Date(
+				Date.now() + this.calculateTimeUntilNextCharge()
+			);
+			fullHealthDate.setMinutes(
+				fullHealthDate.getMinutes() + 3 * (chargesUntilFullHealth - 1)
+			);
+			const fullHealthTimestamp = new Intl.DateTimeFormat(
+				'sv-SE', {timeStyle: 'short'}
+			).format(fullHealthDate);
+
+			titleParts.push(
+				`(${chargesUntilFullHealth} ladd – ${fullHealthTimestamp})`
+			);
+		}
+		
+		$healthStatus.attr('title', titleParts.join(' '));
+	}
+
+	initHealthStatusTooltip()
+	{
+		this.updateHealthStatusTooltip();
+		new EdraniaObserver($('#gladStatHealth')[0], () => {
+			this.updateHealthStatusTooltip()
+		});
 	}
 
 	initAutoUpdateOnCharge()
