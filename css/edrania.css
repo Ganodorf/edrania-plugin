@@ -1,3 +1,10 @@
+/* Extend existing styles */
+
+.teamGameChatMessageTitle {
+	/* Equal-width numeric characters for timestamps to align */
+	font-variant-numeric: tabular-nums;
+}
+
 .chrome-plugin-btn {
 	display: inline-block;
 	padding: 2px 4px;
