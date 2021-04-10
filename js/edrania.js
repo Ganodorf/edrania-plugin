@@ -83,6 +83,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init quick shop for tavern
 	new Tavern();
 
+	challenge = new Challenge();
+
 	// Add button for opening talen calculator
 	const talentCalculator = new TalentCalculator();
 	const $openCalculator = $('<a class="black" href="#">Talent calculator</a>');
