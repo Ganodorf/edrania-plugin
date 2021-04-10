@@ -9,12 +9,12 @@ class Profile {
 	/**
 	 * Get player's default tactics
 	 * @async
-	 * @return {object}
+	 * @return {$.Deferred}
 	 */
 	getPlayerDefaultTactics() 
 	{
 		if (this.cache.defaultTactics !== null) {
-			return this.cache.defaultTactics;
+			return $.when(this.cache.defaultTactics);
 		}
 
 		return $.get("/MyGlad/Profile").then((html) => {

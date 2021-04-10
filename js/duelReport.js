@@ -75,31 +75,19 @@ class DuelReport
 			return;
 		}
 
-		const requestRematch = () => {
-			$.when(profile.getPlayerDefaultTactics()).then(
-				({ tactics, retreatThreshold }) => {
-					const opponentID = this.getOpponentID();
-					const formData = {
-						Tactic: tactics,
-						RetreatThreshold: retreatThreshold,
-						AcceptTreshold: "100",
-						TargetGladiatorID: opponentID
-					};
-
-					$.post(
-						`/Profile/Challenge/${opponentID}`,
-						formData,
-						() => {
-							location.reload();
-						}
-					);
-				}
-			);
-		};
+		const requestRematch = () => challenge.challenge(this.getOpponentID());
 
 		const $rematch = $("<button/>", {
 			text: "Utmana igen",
-			click: requestRematch,
+			click: function () {
+				const $button = $(this);
+				$button.prop('disabled', true);
+				// Retain width when changing text
+				$button.css('width', $button.outerWidth());
+				requestRematch().then(() => {
+					$button.text('Utmanad!');
+				});
+			},
 			css: { float: "right" },
 		});
 
