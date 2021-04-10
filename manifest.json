@@ -16,6 +16,7 @@
 				"/js/vendor/jquery-3.5.1.min.js",
 				"/js/prefill.js",
 				"/js/hoverInfo.js",
+				"/js/persistentFilter.js",
 				"/js/auction.js",
 				"/js/vendor.js",
 				"/js/teamGame.js",
@@ -33,6 +34,7 @@
 				"/js/observer.js",
 				"/js/workDistrict.js",
 				"/js/workshop.js",
+				"/js/searchGladiator.js",
 				"/js/edrania.js"
 			],
 			"css": [
