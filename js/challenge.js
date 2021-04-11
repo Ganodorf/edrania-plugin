@@ -5,13 +5,13 @@ class Challenge
 		this.initQuickChallenge();
 	}
 
-	challenge(gladiatorID)
+	challengeWithDefaultTactics(gladiatorID)
 	{
 		return profile.getPlayerDefaultTactics().then(
 			({ tactics, retreatThreshold }) => {
 				const formData = {
-					Tactic: tactics,
-					RetreatThreshold: retreatThreshold,
+					Tactic: tactics.value,
+					RetreatThreshold: retreatThreshold.value,
 					AcceptTreshold: "100",
 					TargetGladiatorID: gladiatorID
 				};
@@ -48,7 +48,7 @@ class Challenge
 
 				const $opponent = $(event.target);
 				const opponentID = $opponent.attr('href').split('/').pop();
-				this.challenge(opponentID).then(() => {
+				this.challengeWithDefaultTactics(opponentID).then(() => {
 					this.challengeSucceeded($opponent);
 				});
 			}
