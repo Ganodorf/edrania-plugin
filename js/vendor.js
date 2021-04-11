@@ -32,9 +32,20 @@ class Vendor
 	{
 		playerStatus.refresh();
 
-		const $span = $('<b class="text-success">Köpte</b>');
-		$purchaseButton.hide().after($span);
-		$span.fadeOut(1000, function() {
+		const $successText = $('<b>', {
+			class: 'text-success',
+			text: 'Köpt!',
+			css: {
+				position: 'absolute',
+				top: '50%',
+				left: '50%',
+				transform: 'translate(-50%, -50%)'
+			}
+		});
+		$purchaseButton.parent().css('position', 'relative');
+		$purchaseButton.hide().after($successText);
+		$successText.fadeOut(1000, () => {
+			$successText.remove();
 			$purchaseButton.show();
 		});
 	}
