@@ -83,6 +83,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init quick shop for tavern
 	new Tavern();
 
+	challenge = new Challenge();
+
 	// Add button for opening talen calculator
 	const talentCalculator = new TalentCalculator();
 	const $openCalculator = $('<a class="black" href="#">Talent calculator</a>');
@@ -148,6 +150,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	}
 	else if (path === '/Workshop/NewProject/') {
 		new Workshop('new');
+	}
+	else if (path.startsWith('/Search/Gladiator/')) {
+		new SearchGladiator();
 	}
 	else if (path === '/MyGlad/LevelUp/') {
 		talentCalculator.placeLevelUp();
