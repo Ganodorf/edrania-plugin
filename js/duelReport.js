@@ -75,22 +75,42 @@ class DuelReport
 			return;
 		}
 
-		const requestRematch = () => challenge.challenge(this.getOpponentID());
+		const opponentID = this.getOpponentID();
 
-		const $rematch = $("<button/>", {
+		const $rematch = $('<a/>', {
 			text: "Utmana igen",
-			click: function () {
-				const $button = $(this);
-				$button.prop('disabled', true);
-				// Retain width when changing text
-				$button.css('width', $button.outerWidth());
-				requestRematch().then(() => {
-					$button.text('Utmanad!');
+			href: `/Profile/Challenge/${opponentID}`,
+			click: function (event) {
+				if (!event.altKey) {
+					return;
+				}
+
+				event.preventDefault();
+
+				const $link = $(this);
+				$link.css({
+					pointerEvents: 'none',
+					width: $link.outerWidth(),
+					textAlign: 'center'
 				});
+
+				challenge
+					.challengeWithDefaultTactics(opponentID)
+					.then(() => {
+						$link.text('Utmanad!');
+					});
 			},
-			css: { float: "right" },
+			class: 'fat',
+			css: {float: 'right'},
 		});
 
 		$('.nav-arrow').after($rematch);
+
+		profile.getPlayerDefaultTactics().then(
+			({ tactics, retreatThreshold }) => {
+				$rematch.attr('title',
+					`${tactics.label}, ${retreatThreshold.label}`
+				);
+			});
 	}
 }
