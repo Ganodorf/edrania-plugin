@@ -25,6 +25,7 @@
 				"/js/playerStatus.js",
 				"/js/duelReport.js",
 				"/js/profile.js",
+				"/js/attributes.js",
 				"/js/tavern.js",
 				"/js/talentCalculator.js",
 				"/js/talentCalculator/orc.js",
