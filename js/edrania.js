@@ -123,6 +123,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path.search('/MyGlad/Challenges/Out/') > -1) {
 		new Challenges('outgoing');
 	}
+	else if (path.startsWith('/MyGlad/Profile/Attributes/')) {
+		new Attributes();
+	}
 	else if (path.search('/MyGlad/Profile/Biography/Edit/') > -1) {
 		const regex = /(?<=\[plugin\])[\w\W]*(?=\[\/plugin\])/g;
 		const matches = $('.container').find('textarea').val().match(regex);
