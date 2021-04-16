@@ -160,5 +160,14 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path === '/CreateGlad/CreateGladSecond/') {
 		$('h3').after($openCalculator);
 		talentCalculator.placeLevelUp();
+
+		const $stamina = $('#calcStamina');
+		$stamina.attr('title', `~${Math.floor(parseFloat($stamina.text()) * 1.125)} kroppspoäng`);
+		
+		const $endurance = $('#calcEndurance');
+		$endurance.attr('title', `~${Math.floor(parseFloat($endurance.text()) / 4 + 3)} rundor`);
+
+		const $strength = $('#calcStrength');
+		$strength.attr('title', `~${Math.floor(parseFloat($strength.text()) / 10)} skadebonus`);
 	}
 });
