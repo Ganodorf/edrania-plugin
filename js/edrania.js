@@ -51,7 +51,7 @@ function round(number, decimals)
  * @param  {string} value
  * @return {int}
  */
-function parseInteger(value) 
+function parseInteger(value)
 {
 	return parseInt(value, 10);
 }
@@ -76,7 +76,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	hoverInfo = new HoverInfo();
 
 	playerStatus = new PlayerStatus();
-  
+
 	// Profile client
 	profile = new Profile();
 
@@ -125,6 +125,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	}
 	else if (path.startsWith('/MyGlad/Profile/Attributes/')) {
 		new Attributes();
+	}
+	else if (path.search(/\/Tournament\/View\/\d+\/Brackets\//) > -1) {
+		new Tournament();
 	}
 	else if (path.search('/MyGlad/Profile/Biography/Edit/') > -1) {
 		const regex = /(?<=\[plugin\])[\w\W]*(?=\[\/plugin\])/g;
