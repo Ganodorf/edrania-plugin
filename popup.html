@@ -42,6 +42,26 @@
 				<label><input class="js-set-config" type="checkbox" name="highlightWithColor"> Hightlight färg</label> <input class="js-set-config" type="color" name="duelHighlightColor">
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<label title="Undvik att förbruka samtliga rundor genom att välja ett kortare skift"><input class="js-set-config" type="checkbox" name="workshopDuelFriendlyJobs"> Duellvänliga jobb ℹ️</label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>
+					<input class="js-set-config" type="checkbox" name="workshopSetDefaultRounds" /> Standardjobb
+				</label>
+				<select class="js-set-config" name="workshopDefaultRounds">
+					<option value="10">10 rundor (2 sm)</option>
+					<option value="25">25 rundor (7 sm)</option>
+					<option value="50">50 rundor (14 sm)</option>
+					<option value="75">75 rundor (21 sm)</option>
+					<option value="100">100 rundor (28 sm)</option>
+					<option value="125" selected="selected">125 rundor (35 sm)</option>
+				</select>
+			</td>
+		</tr>
 	</table>
 
 	<p>Ändringar slår igenom vid nästa sidladdning.</p>

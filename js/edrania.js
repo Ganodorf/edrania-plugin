@@ -51,7 +51,7 @@ function round(number, decimals)
  * @param  {string} value
  * @return {int}
  */
-function parseInteger(value) 
+function parseInteger(value)
 {
 	return parseInt(value, 10);
 }
@@ -76,7 +76,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	hoverInfo = new HoverInfo();
 
 	playerStatus = new PlayerStatus();
-  
+
 	// Profile client
 	profile = new Profile();
 
@@ -123,6 +123,12 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path.search('/MyGlad/Challenges/Out/') > -1) {
 		new Challenges('outgoing');
 	}
+	else if (path.startsWith('/MyGlad/Profile/Attributes/')) {
+		new Attributes();
+	}
+	else if (path.search(/\/Tournament\/View\/\d+\/Brackets\//) > -1) {
+		new Tournament();
+	}
 	else if (path.search('/MyGlad/Profile/Biography/Edit/') > -1) {
 		const regex = /(?<=\[plugin\])[\w\W]*(?=\[\/plugin\])/g;
 		const matches = $('.container').find('textarea').val().match(regex);
@@ -160,5 +166,14 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path === '/CreateGlad/CreateGladSecond/') {
 		$('h3').after($openCalculator);
 		talentCalculator.placeLevelUp();
+
+		const $stamina = $('#calcStamina');
+		$stamina.attr('title', `~${Math.floor(parseFloat($stamina.text()) * 1.125)} kroppspoäng`);
+		
+		const $endurance = $('#calcEndurance');
+		$endurance.attr('title', `~${Math.floor(parseFloat($endurance.text()) / 4 + 3)} rundor`);
+
+		const $strength = $('#calcStrength');
+		$strength.attr('title', `~${Math.floor(parseFloat($strength.text()) / 10)} skadebonus`);
 	}
 });

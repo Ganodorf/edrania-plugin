@@ -2,6 +2,10 @@ class PlayerStatus
 {
 	constructor()
 	{
+		if ($('#gladStatus').length === 0) {
+			return;
+		}
+
 		this.refreshTimeoutId = null;
 
 		this.initAutoUpdateOnCharge();

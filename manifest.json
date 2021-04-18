@@ -1,6 +1,6 @@
 {
 	"name": "Edrania",
-	"version": "1.9.0",
+	"version": "1.10.0",
 	"description": "Edrania plugin.",
 	"manifest_version": 2,
 	"permissions": [
@@ -22,9 +22,11 @@
 				"/js/teamGame.js",
 				"/js/challenges.js",
 				"/js/challenge.js",
+				"/js/tournament.js",
 				"/js/playerStatus.js",
 				"/js/duelReport.js",
 				"/js/profile.js",
+				"/js/attributes.js",
 				"/js/tavern.js",
 				"/js/talentCalculator.js",
 				"/js/talentCalculator/orc.js",
