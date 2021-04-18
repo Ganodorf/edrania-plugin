@@ -1,7 +1,9 @@
 class SearchGladiator {
-	constructor() 
+	constructor()
 	{
 		this.initPersistentFilter();
+
+		$('#GladiatorName').focus();
 	}
 
 	initPersistentFilter()
