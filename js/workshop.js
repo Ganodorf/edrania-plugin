@@ -93,5 +93,7 @@ class Workshop
 
 			$(tr).find('td:nth(1)').after($td);
 		});
+
+		$('#centerContent a:contains("Jobba"):first').prev().focus();
 	}
 }

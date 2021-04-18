@@ -4,6 +4,8 @@ class Auction
 	{
 		this.initTableChangeObserver();
 		this.initPersistentFilter();
+
+		$('#freeSearch').focus();
 	}
 
 	applyFreeSearchFilter()
