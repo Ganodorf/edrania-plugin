@@ -3,6 +3,8 @@ class WorkDistrict
 	constructor()
 	{
 		this.displaySalaryPerShift();
+
+		$('#Time').focus();
 	}
 
 	displaySalaryPerShift()
