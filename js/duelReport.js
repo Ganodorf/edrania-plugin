@@ -3,6 +3,7 @@ class DuelReport
 	constructor()
 	{
 		this.initHighlightPlayerInReport();
+		this.initLinkGladiatorNamesInFooterToProfile();
 		this.initRematch();
 	}
 
@@ -67,6 +68,20 @@ class DuelReport
 				return $(this).text() === name;
 			})
 			.css(css);
+	}
+
+	initLinkGladiatorNamesInFooterToProfile()
+	{
+		$('#centerContent .spoilerFree:last b:not(:first)').each(function () {
+			const $b = $(this);
+			const $profileLink = $(`a:contains(${$b.text()}):first`).clone();
+
+			if ($profileLink.length > 0) {
+				$b.replaceWith($profileLink);
+			}
+		});
+
+		hoverInfo.initHover();
 	}
 
 	initRematch()
