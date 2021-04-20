@@ -250,22 +250,33 @@ class HoverInfo
 	loadTeamGameTeam($a, cacheHref)
 	{
 		const $ul = $a.parent().find('ul');
+		let totalTeamLevel = 0;
 		this.teamGameTeamRequests = [];
 
 		$ul.find('li').each((index, element) => {
-			const href = $(element).find('a').attr('href') + '/Stats';
+			const $link = $(element).find('a');
+
+			const playerLevel = parseInteger(
+				$link.text().match(/\((?<level>\d+)\)/).groups.level
+			);
+			totalTeamLevel += Number.isInteger(playerLevel) ? playerLevel : 0;
+
+			const href = $link.attr('href') + '/Stats';
 			this.teamGameTeamRequests.push($.get(href));
 		});
 
 		$.when(...this.teamGameTeamRequests).then((...results) => {
-			this.cache[cacheHref] = this.renderTeamGameTeamBox(results);
+			this.cache[cacheHref] = this.renderTeamGameTeamBox(
+				results,
+				totalTeamLevel
+			);
 		});
 	}
 
 	/**
 	 * Render team game team hardest hit
 	 */
-	renderTeamGameTeamBox(results)
+	renderTeamGameTeamBox(results, totalTeamLevel)
 	{
 		let hardestHit = 0;
 
@@ -287,7 +298,9 @@ class HoverInfo
 			hardestHit = 0;
 		}
 
-		const html = '<b>Högsta skada i laget:</b> ' + hardestHit;
+		const html = 
+			`<div><b>Sammanlagd grad:</b> ${totalTeamLevel}</div>
+			<div><b>Högsta skada i laget:</b> ${hardestHit}</div>`;
 
 		this.renderBox(html);
 
