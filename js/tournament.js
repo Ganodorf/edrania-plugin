@@ -9,7 +9,7 @@ class Tournament {
 	initLinkPlayedGamesToDuelReport() 
 	{
 		const $playedGames = $('.teamContainer').filter(function () {
-			return $(this).find('.score').length > 0;
+			return $(this).find('.win, .lose').length > 0;
 		});
 		const playerName = getPlayerName();
 
