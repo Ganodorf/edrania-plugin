@@ -43,7 +43,7 @@ class WorkDistrict
 		const $selectedOption = $rounds.find('option:selected');
 		const selectedIndex = $selectedOption.index();
 
-		if (playerRounds === $selectedOption.val()) {
+		if (playerRounds === parseInteger($selectedOption.val())) {
 			const $newOption = $rounds.find(
 				`option:eq(${Math.max(selectedIndex - 1, 0)})`
 			);
