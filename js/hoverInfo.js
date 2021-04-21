@@ -72,11 +72,14 @@ class HoverInfo
 		let type = '';
 
 		// Check if link match weapon
-		if (href.search('/Vendor/Display/') > -1 && edraniaConfig.hoverWeaponsActive) {
-			type = 'weapon';
+		if (href.search('/Vendor/Display/') > -1 && edraniaConfig.hoverEquipmentActive) {
+			type = 'equipment';
 		}
-		else if (href === '/MyGlad/Profile/Attributes' && edraniaConfig.hoverAttributesActive) {
+		else if (href === '/MyGlad/Profile/Attributes' && edraniaConfig.hoverMyGladiatorActive) {
 			type = 'attributes';
+		}
+		else if (href === '/MyGlad/Profile/Arsenal' && edraniaConfig.hoverMyGladiatorActive) {
+			type = 'arsenal';
 		}
 		else if (/\/Profile\/View\/\d+$/.test(href) && edraniaConfig.hoverPlayerActive) {
 			type = 'player';
@@ -111,11 +114,14 @@ class HoverInfo
 		}
 		else {
 			this.ajaxRequest = $.get(href, (html) => {
-				if (type === 'weapon') {
-					this.cache[cacheHref] = this.renderWeaponInfoBox(html);
+				if (type === 'equipment') {
+					this.cache[cacheHref] = this.renderEquipmentInfoBox(html);
 				}
 				else if (type === 'attributes') {
 					this.cache[cacheHref] = this.renderAttributesInfoBox(html);
+				}
+				else if (type === 'arsenal') {
+					this.cache[cacheHref] = this.renderArsenalInfoBox(html);
 				}
 			});
 		}
@@ -170,9 +176,9 @@ class HoverInfo
 	}
 
 	/**
-	 * Render weapon info box
+	 * Render equipment info box
 	 */
-	renderWeaponInfoBox(html)
+	renderEquipmentInfoBox(html)
 	{
 		let container = $(html).find('.container');
 
@@ -205,7 +211,24 @@ class HoverInfo
 	}
 
 	/**
-	 * Render info about a player equipment
+	 * Render arsenal info box
+	 */
+	renderArsenalInfoBox(html)
+	{
+		let container = $(html).find('.container .row');
+
+		// Remove "Unequip" buttons
+		container.find('table tr td:last-of-type').remove();
+
+		container = container.html();
+
+		this.renderBox(container);
+
+		return container;
+	}
+
+	/**
+	 * Render info about a player
 	 */
 	renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml)
 	{
@@ -298,7 +321,7 @@ class HoverInfo
 			hardestHit = 0;
 		}
 
-		const html = 
+		const html =
 			`<div><b>Sammanlagd grad:</b> ${totalTeamLevel}</div>
 			<div><b>Högsta skada i laget:</b> ${hardestHit}</div>`;
 
