@@ -220,6 +220,9 @@ class HoverInfo
 		// Remove "Unequip" buttons
 		container.find('table tr td:last-of-type').remove();
 
+		// Remove padding
+		container.find('.col-12').css({padding: 0});
+
 		container = container.html();
 
 		this.renderBox(container);
