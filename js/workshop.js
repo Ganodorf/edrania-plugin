@@ -45,6 +45,11 @@ class Workshop
 	 */
 	initList()
 	{
+		// Any onging projects?
+		if ($('#centerContent a[href^="/Workshop/WorkItem/Cancel"]').length === 0) {
+			return;
+		}
+
 		const playerRounds = getPlayerTime();
 
 		$('.compact-table thead th:nth(1)').after('<th>Jobba</th>');
