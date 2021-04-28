@@ -56,6 +56,34 @@ function parseInteger(value)
 	return parseInt(value, 10);
 }
 
+/**
+ * @param  {...int} values
+ * @return {int}
+ */
+function sum(...values)
+{
+	return values.reduce((sum, value) => sum + value, 0);
+}
+
+/**
+ * Create a hidden iframe to laod HTML content in.
+ * 
+ * @param {string} url
+ * @return {jQuery}
+ */
+ function createHiddenIframe(url)
+ {
+	 return $('<iframe>', {
+		 src: url,
+		 css: {
+			 position: 'absolute',
+			 height: 0,
+			 width: 0,
+			 border: 0
+		 }
+	 });
+ }
+
 // Display how much hp each threshold is
 const playerHP = getPlayerMaxHP();
 $('select[name=RetreatThreshold] option').each(function(){
