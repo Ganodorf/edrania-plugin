@@ -8,8 +8,10 @@ class HoverInfo
 		this.playerItemsRequest = null;
 		this.playerStatisticsRequest = null;
 		this.playerProfileRequest = null;
+		this.creatureRequest = null;
 		this.hoverTimeout = null;
 		this.teamGameTeamRequests = [];
+		this.tournamentTeamRequests = [];
 
 		// Init hover
 		this.initHover();
@@ -42,8 +44,15 @@ class HoverInfo
 			if (this.playerProfileRequest !== null) {
 				this.playerProfileRequest.abort();
 			}
+			if (this.creatureRequest !== null) {
+				this.creatureRequest.abort();
+			}
 
 			for (const request of this.teamGameTeamRequests) {
+				request.abort();
+			}
+
+			for (const request of this.tournamentTeamRequests) {
 				request.abort();
 			}
 
@@ -67,7 +76,6 @@ class HoverInfo
 
 		const $a = $(event.currentTarget);
 		let href = $a.attr('href');
-		let cacheHref = href;
 
 		let type = '';
 
@@ -83,7 +91,9 @@ class HoverInfo
 		}
 		else if (/\/Profile\/View\/\d+$/.test(href) && edraniaConfig.hoverPlayerActive) {
 			type = 'player';
-			href += '/Arsenal'
+		}
+		else if (/\/Tournament\/Team\/View\/\d+$/.test(href) && edraniaConfig.hoverPlayerActive) {
+			type = 'tournament';
 		}
 		else if (href.search(/\/TeamGame\/[\d]+\/Join/g) > -1 && edraniaConfig.hoverPlayerActive) {
 			type = 'teamGameTeam';
@@ -93,35 +103,28 @@ class HoverInfo
 			return false;
 		}
 
-		if (this.cache[cacheHref] !== undefined) {
-			this.renderBox(this.cache[cacheHref]);
+		if (this.cache[href] !== undefined) {
+			this.renderBox(this.cache[href]);
 		}
 		else if (type === 'player') {
-			this.playerItemsRequest = $.get(href);
-			this.playerStatisticsRequest = $.get(cacheHref + '/Stats');
-			this.playerProfileRequest = $.get(cacheHref);
-
-			$.when(this.playerItemsRequest, this.playerStatisticsRequest, this.playerProfileRequest).then((a1, a2, a3) => {
-				const itemsHtml = a1[0];
-				const statisticsHtml = a2[0];
-				const profileHtml = a3[0];
-
-				this.cache[cacheHref] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml);
-			});
+			this.loadPlayer(href);
 		}
 		else if (type === 'teamGameTeam') {
-			this.loadTeamGameTeam($a, cacheHref);
+			this.loadTeamGameTeam($a, href);
+		}
+		else if (type === 'tournament') {
+			this.loadTournamentTeam(href);
 		}
 		else {
 			this.ajaxRequest = $.get(href, (html) => {
 				if (type === 'equipment') {
-					this.cache[cacheHref] = this.renderEquipmentInfoBox(html);
+					this.cache[href] = this.renderEquipmentInfoBox(html);
 				}
 				else if (type === 'attributes') {
-					this.cache[cacheHref] = this.renderAttributesInfoBox(html);
+					this.cache[href] = this.renderAttributesInfoBox(html);
 				}
 				else if (type === 'arsenal') {
-					this.cache[cacheHref] = this.renderArsenalInfoBox(html);
+					this.cache[href] = this.renderArsenalInfoBox(html);
 				}
 			});
 		}
@@ -271,9 +274,37 @@ class HoverInfo
 	}
 
 	/**
-	 * Load team game team highest damage
+	 * Load single player
 	 */
-	loadTeamGameTeam($a, cacheHref)
+	loadPlayer(href, cacheHref)
+	{
+		this.playerItemsRequest = $.get(`${href}/Arsenal`);
+		this.playerStatisticsRequest = $.get(`${href}/Stats`);
+		this.playerProfileRequest = $.get(href);
+
+		$.when(this.playerItemsRequest, this.playerStatisticsRequest, this.playerProfileRequest).then((a1, a2, a3) => {
+			const itemsHtml = a1[0];
+			const statisticsHtml = a2[0];
+			const profileHtml = a3[0];
+
+			this.cache[cacheHref ?? href] = this.renderPlayerInfoBox(itemsHtml, statisticsHtml, profileHtml);
+		});
+	}
+
+	/**
+	 * Load creature
+	 */
+	 loadCreature(href, cacheHref)
+	 {
+		 this.creatureRequest = $.get(href, (html) => {
+			this.cache[cacheHref] = this.renderCreatureBox(html);
+		 });
+	 }
+
+	/**
+	 * Load team game team
+	 */
+	loadTeamGameTeam($a, href)
 	{
 		const $ul = $a.parent().find('ul');
 		let totalTeamLevel = 0;
@@ -292,7 +323,7 @@ class HoverInfo
 		});
 
 		$.when(...this.teamGameTeamRequests).then((...results) => {
-			this.cache[cacheHref] = this.renderTeamGameTeamBox(
+			this.cache[href] = this.renderTeamGameTeamBox(
 				results,
 				totalTeamLevel
 			);
@@ -300,7 +331,77 @@ class HoverInfo
 	}
 
 	/**
-	 * Render team game team hardest hit
+	 * Load tournament team
+	 */
+	 async loadTournamentTeam(href)
+	 {
+		const $iframe = createHiddenIframe(href);
+		$('body').append($iframe);
+
+		const onIframeLoad = () => new Promise(resolve => {
+			$iframe.on('load', resolve);
+		});
+
+		await onIframeLoad();
+
+		const teamHref = $iframe[0].contentWindow.location.href;
+
+		if (teamHref.endsWith(href)) {
+			this.loadTeam($iframe.contents().find('body').html(), href);
+		}
+		else {
+			if (teamHref.contains('/Creature/Display')) {
+				this.loadCreature(teamHref, href);
+			}
+			else {
+				this.loadPlayer(teamHref, href);
+			}
+		}
+
+		 $iframe.remove();
+	 }
+
+	 loadTeam(html, href)
+	 {
+		 const $html = $(html);
+		 this.tournamentTeamRequests = [];
+
+		 const creatures = $(html)
+			 .find('#centerContent a[href^="/Creature/Display"]')
+			 .toArray()
+			 .map((link) => {
+				 const $link = $(link);
+
+				 return {
+					 name: $link.text(),
+					 level: parseInteger($link.parent().next().text())
+				 }
+			 });
+
+		 $html.find('#centerContent a[href^="/Profile/View"]').each((_, link) => {
+			 const profileUrl = $(link).attr('href');
+			 this.tournamentTeamRequests.push(
+				 $.get(profileUrl),
+				 $.get(`${profileUrl}/Stats`)
+			 );
+		 });
+
+		 $.when(...this.tournamentTeamRequests).then((...results) => {
+			 const contents = [];
+
+			 for (let i = 0; i < results.length - 1; i += 2) {
+				 const [profileHtml] = results[i];
+				 const [statsHtml] = results[i + 1];
+
+				 contents.push({profileHtml, statsHtml});
+			 }
+
+			 this.cache[href] = this.renderTournamentTeamBox(contents, creatures);
+		 })
+	 }
+
+	/**
+	 * Render team game team
 	 */
 	renderTeamGameTeamBox(results, totalTeamLevel)
 	{
@@ -334,12 +435,106 @@ class HoverInfo
 	}
 
 	/**
+	 * Render tournament team
+	 */
+	 renderTournamentTeamBox(contents, creatures)
+	 {
+		 const hasCreatures = creatures.length > 0;
+		 const teamMembers = [
+			 ...contents.map(({profileHtml}) => ({
+				 name: this.getName(profileHtml),
+				 race: this.getRace(profileHtml),
+				 level: this.getLevel(profileHtml)
+			 })),
+			 ...creatures
+		 ];
+		 const hardestHit = Math.max.apply(Math, contents.map(({statsHtml}) =>
+			 this.getHardestHit(statsHtml)
+		 ));
+		 const totalTeamLevel = sum(...teamMembers.map(({level}) => level));
+		 const statistics = [
+			 {label: 'Sammanlagd grad', value: totalTeamLevel},
+			 {label: `Högsta skada i laget${hasCreatures ? '*' : ''}` , value: hardestHit}
+		 ];
+
+		 const toMetadata = (race, level) => 
+			 typeof race !== "undefined" ? `${race}, ${level}` : level;
+
+		 const htmlParts = [
+			 '<ul style="padding-left: 25px">',
+			 ...teamMembers.map(({name, race, level}) => `<li>
+				 	<a class="fat">${name}</a>
+					<span style="font-size: 14px">
+						(${toMetadata(race, level)})
+					</span>
+				</li>`
+			 ),
+			 '</ul>',
+			 ...statistics.map(({label, value}) => `<div><b>${label}:</b> ${value}</div>`
+			 ),
+			 
+		 ];
+
+		 if (hasCreatures) {
+			 htmlParts.push(
+				 '<br/>',
+				 '* <strong>OBS!</strong> Bestar <em>ej</em> inräknade'
+			 );
+		 }
+
+		 const html = htmlParts.join('\n');
+
+		 this.renderBox(html);
+
+		 return html;
+	 }
+
+	 renderCreatureBox(creatureHtml)
+	 {
+		const weapons = $(creatureHtml).find('#centerContent table:first').html();
+		const armor = $(creatureHtml).find('#centerContent table:second').html();
+
+		const html = [
+			weapons,
+			'<br/>',
+			armor
+		].join('\n');
+		
+		this.renderBox(html);
+
+		return html;
+	 }
+
+	/**
 	 * Get hardest hit from html
 	 */
 	getHardestHit(html)
 	{
-		return parseInteger($(html).find('.compact-table:nth(2) tbody tr:first td:nth(1)').text());
+		const hardestHit = parseInteger($(html).find('.compact-table:nth(2) tbody tr:first td:nth(1)').text());
+		return Number.isNaN(hardestHit) ? 0 : hardestHit;
 	}
+
+	/**
+	 * Get player name
+	 */
+	 getName(html) {
+		return $(html).find('#centerContent h3').text();
+	}
+
+	/**
+	 * Get player race
+	 */
+	getRace(html) {
+		return $(html).find('#centerContent table:first tbody tr:nth(4) td').text();
+	}
+
+	/**
+	 * Get player level
+	 */
+	 getLevel(html)
+	 {
+		 return parseInteger($(html).find('#centerContent table:first tbody tr:nth(7) td').text());
+	 }
 
 	/**
 	 * Clear cache for team game teams
