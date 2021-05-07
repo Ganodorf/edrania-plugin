@@ -69,7 +69,7 @@ class Tournament {
 			return;
 		}
 
-		$game.attr('title', 'Laddar matchrapport...');
+		$game.find('.team').css('cursor', 'wait');
 
 		const $iframe = this.createHiddenIframe(window.location.href);
 		$('body').append($iframe);
@@ -109,7 +109,8 @@ class Tournament {
 					event.stopPropagation();
 				}
 			}))
-			.removeAttr('title');
+			.find('.team')
+			.css('cursor', '');
 
 		$iframe.remove();
 	}
