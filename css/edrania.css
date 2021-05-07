@@ -27,10 +27,45 @@
 .chrome-plugin-info-box {
 	position: fixed;
 	background: #fff;
-	padding: 5px;
-	border: 1px solid #000;
-	border-radius: 3px;
+	padding: 1rem;
+	box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+	border-radius: 0.375rem;
 	z-index: 1000;
+}
+
+.chrome-plugin-info-box__avatar {
+	align-items: flex-start;
+	border-radius: 9999px;
+	box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+	display: flex;
+	height: 200px;
+	justify-content: center;
+	overflow: hidden;
+	width: 200px;
+}
+
+.chrome-plugin-info-box__empty-avatar {
+	display: flex;
+	align-items: center;
+	justify-content: center; 
+	background-color: rgb(243, 244, 246); 
+	align-self: stretch; 
+	flex-grow: 1;
+}
+
+.chrome-plugin-info-box__biography {
+	align-items: center;
+	border-radius: 6px;
+	box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+	display: flex;
+	font-style: italic;
+	justify-content: center;
+	margin-top: 0.75rem;
+	max-width: 200px;
+	min-height: 3.5rem;
+	padding: 0.5rem 0.75rem;
+	white-space: break-spaces;
+	width: 100%;
 }
 
 .chrome-plugin-tiny-text {
@@ -111,9 +146,15 @@
 .ml {
 	margin-left: 10px;
 }
+.spacer {
+	height: 0.75rem;
+}
 .text-success {
 	color: #71b346;
 }
 .text-error {
 	color: #de0002;
+}
+.text-right {
+	text-align: right;
 }
