@@ -642,9 +642,15 @@ class HoverInfo
 			// Remove padding
 			container.find('.col-12').css({padding: 0});
 	
-			this.replaceAccessoriesHeader(
-				container.find('.col-12:nth(2)').css('marginTop', 0)
-			).before('<br>');
+			if (container.find('.col-12:nth(2) table').text().trim().length > 0) {
+				this.replaceAccessoriesHeader(
+					container.find('.col-12:nth(2)').css('marginTop', 0)
+				).before('<br>');
+			} 
+			else {
+				container.find('.col-12:nth(2)').remove();
+			}
+
 			this.replaceLineBreaksWithSpacer(container);
 	
 			return container.html();
@@ -662,8 +668,7 @@ class HoverInfo
 
 		return `
 			${equipment}
-			<br/>
-			${hasAccessories ? accessories : `${accessories}<div>Tomt</div>`}
+			${hasAccessories ? `<br/>${accessories}` : ""}
 		`;
 	}
 
