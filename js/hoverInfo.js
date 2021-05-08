@@ -637,7 +637,7 @@ class HoverInfo
 			const container = $(html).find('.container .row');
 
 			// Remove "Unequip" buttons
-			container.find('table tr td:last-of-type').remove();
+			container.find('table tr td:nth-of-type(2)').remove();
 	
 			// Remove padding
 			container.find('.col-12').css({padding: 0});
