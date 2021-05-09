@@ -81,7 +81,6 @@ class HoverInfo
 
 		let type = '';
 
-		// Check if link match weapon
 		if (href.search('/Vendor/Display/') > -1 && edraniaConfig.hoverEquipmentActive) {
 			type = 'equipment';
 		}
@@ -90,6 +89,13 @@ class HoverInfo
 		}
 		else if (href === '/MyGlad/Profile/Arsenal' && edraniaConfig.hoverMyGladiatorActive) {
 			type = 'arsenal';
+		}
+		else if (
+			/History\/\d+$/.test(window.location.pathname) && 
+			href.startsWith('/Duel/Reports') && 
+			edraniaConfig.hoverHistoryDuelReportActive
+		) {
+			type = 'history';
 		}
 		else if (/\/Profile\/View\/\d+$/.test(href) && edraniaConfig.hoverPlayerActive) {
 			type = 'player';
@@ -127,6 +133,9 @@ class HoverInfo
 				}
 				else if (type === 'arsenal') {
 					this.cache[href] = this.renderArsenalInfoBox(html);
+				}
+				else if (type === 'history') {
+					this.cache[href] = this.renderHistoryDuelReportInfoBox(html);
 				}
 			});
 		}
@@ -242,6 +251,28 @@ class HoverInfo
 
 		return content;
 	}
+
+	/**
+	 * Render history duel report info box
+	 */
+		 renderHistoryDuelReportInfoBox(html)
+		 {
+			 const container = $(html)
+				 .find('#centerContent .col-lg-12')
+				 .children(':first');
+
+			 container.find('.nav-arrow, .spoilerFree').remove();
+
+			 while (container.find('br:first-child, br:last-child').length > 0) {
+				 container.find('br:first-child, br:last-child').remove();
+			 }
+
+			 const content = container.html();
+	 
+			 this.renderBox(content);
+	 
+			 return content;
+		 }
 
 	/**
 	 * Render info about a player
