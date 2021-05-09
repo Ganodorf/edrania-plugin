@@ -340,7 +340,7 @@ class HoverInfo
 	/**
 	 * Load single player
 	 */
-	loadPlayer(href, cacheHref)
+	loadPlayer(href)
 	{
 		this.playerArsenalRequest = $.get(`${href}/Arsenal`);
 		this.playerStatisticsRequest = $.get(`${href}/Stats`);
@@ -351,7 +351,8 @@ class HoverInfo
 			const statisticsHtml = a2[0];
 			const profileHtml = a3[0];
 
-			this.cache[cacheHref ?? href] = this.renderPlayerInfoBox(arsenalHtml, statisticsHtml, profileHtml);
+			// Don't cache as content (most importantly arsenal) can change
+			this.renderPlayerInfoBox(arsenalHtml, statisticsHtml, profileHtml);
 		});
 	}
 
@@ -418,7 +419,7 @@ class HoverInfo
 				this.loadCreature(teamHref, href);
 			}
 			else {
-				this.loadPlayer(teamHref, href);
+				this.loadPlayer(teamHref);
 			}
 		}
 
