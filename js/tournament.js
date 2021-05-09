@@ -5,8 +5,6 @@ class Tournament {
 		this.pointer = {x: 0, y: 0};
 
 		this.initLinkPlayedGamesToDuelReport();
-
-		hoverInfo.initHover();
 	}
 
 	initLinkPlayedGamesToDuelReport() 
@@ -45,7 +43,7 @@ class Tournament {
 			.on('mouseenter', (event) => {
 				this.hoverTimeout = setTimeout(() => {
 					const $targetElement = $(document.elementFromPoint(
-						this.pointer.x, 
+						this.pointer.x,
 						this.pointer.y
 					));
 
