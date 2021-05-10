@@ -2,6 +2,7 @@ class Tournament {
 	constructor() 
 	{
 		this.hoverTimeout;
+		this.pointer = {x: 0, y: 0};
 
 		this.initLinkPlayedGamesToDuelReport();
 	}
@@ -9,7 +10,7 @@ class Tournament {
 	initLinkPlayedGamesToDuelReport() 
 	{
 		const $playedGames = $('.teamContainer').filter(function () {
-			return $(this).find('.score').length > 0;
+			return $(this).find('.win, .lose').length > 0;
 		});
 		const playerName = getPlayerName();
 
@@ -24,8 +25,6 @@ class Tournament {
 					.includes(player);
 		}
 
-		// To make it show ASAP on hover, will be removed when loaded
-		$playedGames.attr('title', 'Laddar matchrapport...');
 
 		// Prefetch own games
 		$playedGames
@@ -43,12 +42,22 @@ class Tournament {
 			})
 			.on('mouseenter', (event) => {
 				this.hoverTimeout = setTimeout(() => {
-					this.ensureGameIsLinkedToDuelReport($(event.currentTarget));
+					const $targetElement = $(document.elementFromPoint(
+						this.pointer.x,
+						this.pointer.y
+					));
+
+					if (!$targetElement.is('a') && $targetElement.parents('a').length === 0) {
+						this.ensureGameIsLinkedToDuelReport($(event.currentTarget));
+					}
 				}, 100);
 			})
 			.on('mouseleave', () => {
 				clearTimeout(this.hoverTimeout);
-			});
+			})
+			.on('mousemove', ({clientX: x, clientY: y}) => {
+				this.pointer = {x, y};
+			});;
 	}
 
 	async ensureGameIsLinkedToDuelReport($game) 
@@ -57,6 +66,8 @@ class Tournament {
 		if ($game.children().is('a')) {
 			return;
 		}
+
+		$game.find('.team').css('cursor', 'wait');
 
 		const $iframe = this.createHiddenIframe(window.location.href);
 		$('body').append($iframe);
@@ -96,7 +107,8 @@ class Tournament {
 					event.stopPropagation();
 				}
 			}))
-			.removeAttr('title');
+			.find('.team')
+			.css('cursor', '');
 
 		$iframe.remove();
 	}
