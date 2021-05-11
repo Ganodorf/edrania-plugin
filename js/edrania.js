@@ -202,6 +202,6 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 		$endurance.attr('title', `~${Math.floor(parseFloat($endurance.text()) / 4 + 3)} rundor`);
 
 		const $strength = $('#calcStrength');
-		$strength.attr('title', `~${Math.floor(parseFloat($strength.text()) / 10)} skadebonus`);
+		$strength.attr('title', `~${Math.floor(parseFloat($strength.text()) * 0.09)} skadebonus`);
 	}
 });

@@ -32,9 +32,9 @@ class DuelReport
 	is1on1()
 	{
 		return (
-			$('b:contains("Lag"):first')
+			$('b:contains("Lag"):first, b:contains("Team"):first')
 				.siblings()
-				.filter('a,b:not(:contains("Lag"))').length === 2
+				.filter('a,b:not(:contains("Lag")),b:not(:contains("Team"))').length === 2
 		);
 	}
 
