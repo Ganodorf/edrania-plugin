@@ -98,6 +98,7 @@ class TeamGame
 		}
 
 		this.updateViewGame();
+		$('#messageInput').focus();
 	}
 
 	/**

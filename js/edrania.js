@@ -176,6 +176,11 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path.startsWith('/Duel/Reports/')) {
 		new DuelReport();
 	}
+	else if (path.startsWith('/Duel/Search/')) {
+		if ($('#Tactic').length) {
+			$('#Tactic').focus();
+		}
+	}
 	else if (path.startsWith('/Work/')) {
 		new WorkDistrict();
 	}
