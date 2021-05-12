@@ -494,12 +494,12 @@ class HoverInfo
 			`<table
 				<tbody>
 					<tr>
-						<th>Sammanlagd grad:</th>
-						<td class="text-right">${totalTeamLevel}</td>
-					</tr>
-					<tr>
 						<th>Högsta skada i laget:</th> 
 						<td class="text-right">${hardestHit}</td>
+					</tr>
+					<tr>
+						<th>Sammanlagd grad:</th>
+						<td class="text-right">${totalTeamLevel}</td>
 					</tr>
 				</tbody>
 			</table>`;
@@ -530,8 +530,8 @@ class HoverInfo
 			 : 'N/A';
 		 const totalTeamLevel = sum(...teamMembers.map(({level}) => level || 0));
 		 const statistics = [
+			 {label: `Högsta skada i laget${hasCreatures ? '*' : ''}` , value: hardestHit},
 			 {label: 'Sammanlagd grad', value: totalTeamLevel},
-			 {label: `Högsta skada i laget${hasCreatures ? '*' : ''}` , value: hardestHit}
 		 ];
 
 		 const toMetadata = (race, level) => race ? `${race}, ${level}` : level ? level : '⚰️';
