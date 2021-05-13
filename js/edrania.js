@@ -187,6 +187,9 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			new ClanMine();
 		}
 	}
+	else if (/Clan\/\d+\/Stockpile/.test(path)) {
+		new ClanStockpile();
+	}
 	else if (path.startsWith('/Work/')) {
 		new WorkDistrict();
 	}
