@@ -181,6 +181,12 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 			$('#Tactic').focus();
 		}
 	}
+	else if (/Clan\/\d+\/Buildings\/\d+/.test(path)) {
+		const section = $('.clanBuildingSection h5').text();
+		if (section === 'Gruva' || section === 'Mine') {
+			new ClanMine();
+		}
+	}
 	else if (path.startsWith('/Work/')) {
 		new WorkDistrict();
 	}
