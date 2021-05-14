@@ -69,7 +69,7 @@ class Tournament {
 
 		$game.find('.team').css('cursor', 'wait');
 
-		const $iframe = this.createHiddenIframe(window.location.href);
+		const $iframe = createHiddenIframe(window.location.href);
 		$('body').append($iframe);
 
 		const onIframeLoad = () => new Promise(resolve => {
@@ -111,18 +111,5 @@ class Tournament {
 			.css('cursor', '');
 
 		$iframe.remove();
-	}
-
-	createHiddenIframe(url) 
-	{
-		return $('<iframe>', {
-			src: url,
-			css: {
-				position: 'absolute',
-				height: 0,
-				width: 0,
-				border: 0
-			}
-		});
 	}
 }
