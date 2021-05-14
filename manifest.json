@@ -25,6 +25,7 @@
 				"/js/tournament.js",
 				"/js/playerStatus.js",
 				"/js/duelReport.js",
+				"/js/myClan.js",
 				"/js/clanMine.js",
 				"/js/clanStockpile.js",
 				"/js/profile.js",
