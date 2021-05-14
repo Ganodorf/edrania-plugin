@@ -47,9 +47,9 @@
 .chrome-plugin-info-box__empty-avatar {
 	display: flex;
 	align-items: center;
-	justify-content: center; 
-	background-color: rgb(243, 244, 246); 
-	align-self: stretch; 
+	justify-content: center;
+	background-color: rgb(243, 244, 246);
+	align-self: stretch;
 	flex-grow: 1;
 }
 

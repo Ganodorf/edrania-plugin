@@ -111,6 +111,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init quick shop for tavern
 	new Tavern();
 
+	new MyClan();
+
 	challenge = new Challenge();
 
 	// Add button for opening talen calculator
