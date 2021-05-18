@@ -8,7 +8,7 @@ class Attributes
 	initDisplayDerivedDamageBonusFromStrength()
 	{
 		const $strength = $('#centerContent')
-			.find('th:contains("Styrka"), #centerContent th:contains("Strength")')
+			.find('th:contains("Styrka"), th:contains("Strength")')
 			.next();
 		const strength = parseInteger($strength.text());
 		const normalDamageBonus = Math.floor(strength * 0.09);
