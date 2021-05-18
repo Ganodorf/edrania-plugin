@@ -2,8 +2,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<link href="css/popup.css" rel="stylesheet" />
 </head>
-<body style="width: 300px;">
+<body>
 	<h1>Inställningar</h1>
 
 	<table>
@@ -44,12 +45,15 @@
 		</tr>
 		<tr>
 			<td>
-				<label><input class="js-set-config" type="checkbox" name="highlightWithColor"> Hightlight färg</label> <input class="js-set-config" type="color" name="duelHighlightColor">
+				<label><input class="js-set-config" type="checkbox" name="highlightWithColor"> Hightlight färg</label>
+				<input class="js-set-config" type="color" name="duelHighlightColor" style="margin-left: 0.375rem;">
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label title="Undvik att förbruka samtliga rundor genom att välja ett kortare skift"><input class="js-set-config" type="checkbox" name="workshopDuelFriendlyJobs"> Duellvänliga jobb ℹ️</label>
+				<label title="Undvik att förbruka samtliga rundor genom att välja ett kortare skift"><input
+						class="js-set-config" type="checkbox" name="workshopDuelFriendlyJobs"
+						style="align-self: center;"> Duellvänliga jobb ℹ️</label>
 			</td>
 		</tr>
 		<tr>
@@ -57,7 +61,7 @@
 				<label>
 					<input class="js-set-config" type="checkbox" name="workshopSetDefaultRounds" /> Standardjobb
 				</label>
-				<select class="js-set-config" name="workshopDefaultRounds">
+				<select class="js-set-config" name="workshopDefaultRounds" style="margin-left: 0.375rem;">
 					<option value="10">10 rundor (2 sm)</option>
 					<option value="25">25 rundor (7 sm)</option>
 					<option value="50">50 rundor (14 sm)</option>
@@ -69,7 +73,20 @@
 		</tr>
 	</table>
 
-	<p>Ändringar slår igenom vid nästa sidladdning.</p>
+	<h2>Min klan</h2>
+
+	<table>
+		<tr>
+			<td>
+				<label><input class="js-set-config" type="checkbox" name="replaceWorkDistrictWithMine"> Ersätt
+					Jobbdistriktet med Gruva</label>
+			</td>
+		</tr>
+	</table>
+
+	<hr class="divider" />
+
+	<p class="text-center text-gray">Ändringar slår igenom vid nästa sidladdning</p>
 
 	<script src="js/popup.js"></script>
 </body>

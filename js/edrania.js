@@ -111,6 +111,8 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	// Init quick shop for tavern
 	new Tavern();
 
+	new MyClan();
+
 	challenge = new Challenge();
 
 	// Add button for opening talen calculator
@@ -176,6 +178,20 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 	else if (path.startsWith('/Duel/Reports/')) {
 		new DuelReport();
 	}
+	else if (path.startsWith('/Duel/Search/')) {
+		if ($('#Tactic').length) {
+			$('#Tactic').focus();
+		}
+	}
+	else if (/Clan\/\d+\/Buildings\/\d+/.test(path)) {
+		const section = $('.clanBuildingSection h5').text();
+		if (section === 'Gruva' || section === 'Mine') {
+			new ClanMine();
+		}
+	}
+	else if (/Clan\/\d+\/Stockpile/.test(path)) {
+		new ClanStockpile();
+	}
 	else if (path.startsWith('/Work/')) {
 		new WorkDistrict();
 	}
@@ -202,6 +218,6 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 		$endurance.attr('title', `~${Math.floor(parseFloat($endurance.text()) / 4 + 3)} rundor`);
 
 		const $strength = $('#calcStrength');
-		$strength.attr('title', `~${Math.floor(parseFloat($strength.text()) / 10)} skadebonus`);
+		$strength.attr('title', `~${Math.floor(parseFloat($strength.text()) * 0.09)} skadebonus`);
 	}
 });
