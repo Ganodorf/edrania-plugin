@@ -5,7 +5,7 @@ class Orc
 		this.name = 'Ork';
 		this.health = 1.2;
 		this.endurance = 0.9;
-		this.strength = 1.3;
+		this.strength = 1.35;
 		this.evasion = 0.9;
 		this.initiative = 1;
 		this.tactics = 0.9;
@@ -15,5 +15,6 @@ class Orc
 		this.chain = 1.1;
 		this.hammer = 1.1;
 		this.shield = 1.1;
+		this.unarmed = 0.9;
 	}
 }
