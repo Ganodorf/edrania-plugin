@@ -32,9 +32,10 @@ class Profile {
 		
 		return this.getHtml().then(html => {
 			const clan = $(html).find('#centerContent table tr:nth(9) td a');
+			const clanUrl = clan.attr('href');
 
-			if (clan.length > 0) {
-				return this.cache.clanUrl = clan.attr('href');
+			if (clanUrl.length > 0 && clanUrl !== '/Clan/-1') {
+				return this.cache.clanUrl = clanUrl;
 			}
 
 			return null;
