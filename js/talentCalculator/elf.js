@@ -4,7 +4,7 @@ class Elf
 	{
 		this.name = 'Alv';
 		this.health = 0.9;
-		this.endurance = 1.4;
+		this.endurance = 1.2;
 		this.strength = 0.9;
 		this.evasion = 1.5;
 		this.initiative = 1.4;
@@ -15,5 +15,6 @@ class Elf
 		this.chain = 1;
 		this.hammer = 1;
 		this.shield = 1.2;
+		this.unarmed = 1;
 	}
 }
