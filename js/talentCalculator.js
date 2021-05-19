@@ -14,7 +14,8 @@ class TalentCalculator
 			{stat: 'sword', text: 'Svärd', levelUpInput: 'Sword'},
 			{stat: 'chain', text: 'Kättingvapen', levelUpInput: 'Chain'},
 			{stat: 'shield', text: 'Sköld', levelUpInput: 'Shield'},
-			{stat: 'hammer', text: 'Hammare', levelUpInput: 'Hammer'}
+			{stat: 'hammer', text: 'Hammare', levelUpInput: 'Hammer'},
+			{stat: 'unarmed', text: 'Holmgång', levelUpInput: 'Unarmed'}
 		];
 
 		this.races = [
@@ -328,7 +329,7 @@ class TalentCalculator
 			let spendedPoints = 0;
 			const maxPoints = level === 1 ? this.attributePointsStart : this.attributePointsPerLevel;
 			for (const stat of this.stats) {
-				spendedPoints += build.levels[key][stat.stat];
+				spendedPoints += build.levels[key][stat.stat] || 0;
 			}
 
 			const $edit = $('<a href="#">Redigera</a>');
@@ -362,7 +363,7 @@ class TalentCalculator
 		for (const stat of this.stats) {
 			const $tr = $('<tr>');
 			$tr.append('<th>' + stat.text + '</th>');
-			$tr.append('<td>' + totalPoints[stat.stat] + '</td>');
+			$tr.append('<td>' + round(parseFloat(totalPoints[stat.stat] || 0, 2)) + '</td>');
 			$totalPointsTable.append($tr);
 		}
 

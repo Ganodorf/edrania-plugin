@@ -14,6 +14,7 @@ class Human
 		this.sword = 1.2;
 		this.chain = 1.1;
 		this.hammer = 1.1;
-		this.shield = 1.3;
+		this.shield = 1.2;
+		this.unarmed = 1.1;
 	}
 }
