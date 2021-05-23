@@ -74,7 +74,12 @@ class DuelReport
 	{
 		$('#centerContent .spoilerFree:last b:not(:first)').each(function () {
 			const $b = $(this);
-			const $profileLink = $(`#centerContent a:contains(${$b.text()}):first`).clone();
+			const $profileLink = $('#centerContent a')
+				.filter(function () {
+					return $(this).text() === $b.text();
+				})
+				.first()
+				.clone();
 
 			if ($profileLink.length > 0) {
 				$b.replaceWith($profileLink);
