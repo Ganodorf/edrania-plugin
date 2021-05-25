@@ -280,7 +280,7 @@ class HoverInfo
 	renderPlayerInfoBox(arsenalHtml, statisticsHtml, profileHtml)
 	{
 		// Dead?
-		if ($(profileHtml).find('.col-lg-12').children().first().is('h5')) {
+		if ($(profileHtml).find('#centerContent img[src$="gravsten.jpg"]').length > 0) {
 			const content = this.createDeadPlayerContent();
 			this.renderBox(content);
 			return content;
