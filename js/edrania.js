@@ -203,10 +203,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 		}
 	}
 	else if (/Clan\/\d+\/Buildings\/\d+/.test(path)) {
-		const section = $('.clanBuildingSection h5').text();
-		if (section === 'Gruva' || section === 'Mine') {
-			new ClanMine();
-		}
+		new ClanBuilding();
 	}
 	else if (/Clan\/\d+\/Stockpile/.test(path)) {
 		new ClanStockpile();

@@ -1,4 +1,4 @@
-class ClanMine
+class ClanBuilding
 {
 	constructor()
 	{
