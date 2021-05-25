@@ -34,7 +34,7 @@ class Profile {
 			const clan = $(html).find('#centerContent table tr:nth(9) td a');
 			const clanUrl = clan.attr('href');
 
-			if (clanUrl.length > 0 && clanUrl !== '/Clan/-1') {
+			if (clanUrl && clanUrl.length > 0 && clanUrl !== '/Clan/-1') {
 				return this.cache.clanUrl = clanUrl;
 			}
 
