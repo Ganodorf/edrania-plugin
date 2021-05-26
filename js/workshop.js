@@ -18,11 +18,12 @@ class Workshop
 	 */
 	initNewProject()
 	{
-		const $totalCost = $('<span></span>');
-		$('#selectedProjectTimeToCreate').after('<br><b id="js-total-cost">Total kostnad: </b>');
+		const $totalCost = $('<span>');
+		const $timeToCreate = $('#selectedProjectTimeToCreate');
+		$timeToCreate.after('<br><b id="js-total-cost">Total kostnad: </b>');
 		$('#js-total-cost').after($totalCost);
 
-		// Add cost of number of rounds
+		// Add cost of number of rounds and estimated time required
 		$('#projectList').on('change', () => {
 			if (!$('#projectList').val()) {
 				return;
@@ -31,13 +32,31 @@ class Workshop
 			hoverInfo.initHover();
 
 			const startCost = parseInteger($('#selectedProjectPrice').text().replace(/[\D]/g, ''));
-			const rounds = parseInteger($('#selectedProjectTimeToCreate').text().replace(/[\D]/g, ''));
+			const rounds = parseInteger($timeToCreate.text().replace(/[\D]/g, ''));
 			const roundCost = parseInteger(rounds * 0.28);
 			const totalCost = startCost + roundCost;
+			const estimatedTime = this.formatSeconds((rounds / 175) * 3600);
 
-			$('#selectedProjectTimeToCreate').append(' (' + roundCost + ' mynt)')
-			$totalCost.text(totalCost + ' mynt');
+			$timeToCreate.append(` (~${estimatedTime})`);
+			$totalCost.text(`${totalCost} mynt (${roundCost} mynt för rundorna)`);
 		});
+	}
+
+	formatSeconds(seconds)
+	{
+		const hours = Math.floor(seconds / 3600);
+		const minutes = Math.floor((seconds % 3600) / 60);
+		const parts = [];
+
+		if (hours > 0) {
+			parts.push(`${hours}h`);
+		}
+
+		if (minutes > 0) {
+			parts.push(`${minutes}m`);
+		}
+	  
+		return parts.join(' ');
 	}
 
 	/**
