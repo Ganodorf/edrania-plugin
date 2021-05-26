@@ -495,7 +495,7 @@ class HoverInfo
 				<tbody>
 					<tr>
 						<th>Högsta skada i laget:</th> 
-						<td class="text-right">${hardestHit}</td>
+						<td class="text-right text-error">${hardestHit}</td>
 					</tr>
 					<tr>
 						<th>Sammanlagd grad:</th>
@@ -530,7 +530,7 @@ class HoverInfo
 			 : 'N/A';
 		 const totalTeamLevel = sum(...teamMembers.map(({level}) => level || 0));
 		 const statistics = [
-			 {label: `Högsta skada i laget${hasCreatures ? '*' : ''}` , value: hardestHit},
+			 {label: `Högsta skada i laget${hasCreatures ? '*' : ''}`, value: `<span class="text-error">${hardestHit}</span>`},
 			 {label: 'Sammanlagd grad', value: totalTeamLevel},
 		 ];
 
@@ -711,7 +711,7 @@ class HoverInfo
 				<tbody>
 					<tr>
 						<th>Högsta skada:</th>
-						<td class="text-right">${hardestHit}</td>
+						<td class="text-right text-error">${hardestHit}</td>
 					</tr>
 					<tr>
 						<th>Mest undvikningar:</th>
