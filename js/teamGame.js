@@ -4,6 +4,9 @@ const ReadyStateIcon = Object.freeze({
 	NotReady: "🛡️"
 });
 
+const URL_REGEX = /^(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?:\w+:\w+@)?((?:(?:[-\w\d{1-3}]+\.)+(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|edu|co\.uk|ac\.uk|it|fr|tv|museum|asia|local|travel|[a-z]{2}))|((\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)(\.(\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)){3}))(?::[\d]{1,5})?(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?:#(?:[-\w~!$ |\/.,*:;=]|%[a-f\d]{2})*)?$/i;
+
+const PROTOCOL_REGEX = /^(?:ht|f)tp(?:s?)\:\/\//;
 class TeamGame
 {
 	constructor(action)
@@ -89,15 +92,21 @@ class TeamGame
 	setupViewGame()
 	{
 		// Setup observer for changes so we can init hover if anything changes
-		for (let i = 0; i < $('.teamGameTeamContainer').length; i++) {
-			new EdraniaObserver($('.teamGameTeamContainer')[i], () => {
+		$('.teamGameTeamContainer').each((_, container) => {
+			new EdraniaObserver(container, () => {
 				hoverInfo.clearCacheTeamGameTeams();
 				hoverInfo.initHover();
 				this.updateViewGame();
 			});
-		}
+		});
 
-		this.updateViewGame();
+		new EdraniaObserver($('#teamGameChatWindow')[0], (mutations) => {
+			for (const {addedNodes} of mutations) {
+				const $messages = $(addedNodes).find('.teamGameChatMessage');
+				this.linkifyUrlsInChat($messages);
+			}
+		});
+
 		$('#messageInput').focus();
 	}
 
@@ -145,6 +154,23 @@ class TeamGame
 		this.setPlayersReadyState();
 		this.setPlayersHealthColor();
 		this.ensureTeamCountIsCorrect();
+	}
+
+	linkifyUrlsInChat($messages)
+	{
+		$messages.each((_, message) => {
+			const $message = $(message);
+			const text = $message.text();
+			const linkifiedText = text
+				.split(' ')
+				.map(word => word.replace(URL_REGEX, (url) => {
+					const urlWithProtocol = PROTOCOL_REGEX.test(url) ? url : `https://${url}`;
+					return `<a href="${urlWithProtocol}" target="_blank">${url}</a>`
+				}))
+				.join(' ');
+
+			$message.html(linkifiedText);
+		});
 	}
 
 	/**
