@@ -7,6 +7,7 @@ const ReadyStateIcon = Object.freeze({
 const URL_REGEX = /^(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?:\w+:\w+@)?((?:(?:[-\w\d{1-3}]+\.)+(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|edu|co\.uk|ac\.uk|it|fr|tv|museum|asia|local|travel|[a-z]{2}))|((\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)(\.(\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)){3}))(?::[\d]{1,5})?(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?:#(?:[-\w~!$ |\/.,*:;=]|%[a-f\d]{2})*)?$/i;
 
 const PROTOCOL_REGEX = /^(?:ht|f)tp(?:s?)\:\/\//;
+
 class TeamGame
 {
 	constructor(action)
@@ -104,8 +105,15 @@ class TeamGame
 			for (const {addedNodes} of mutations) {
 				const $messages = $(addedNodes).find('.teamGameChatMessage');
 				this.linkifyUrlsInChat($messages);
+				this.linkifyMentionsInChat($messages);
 			}
 		});
+
+		const $messages = $('#teamGameChatWindow .teamGameChatMessage');
+		this.linkifyUrlsInChat($messages);
+		this.linkifyMentionsInChat($messages);
+
+		this.updateViewGame();
 
 		$('#messageInput').focus();
 	}
@@ -171,6 +179,67 @@ class TeamGame
 
 			$message.html(linkifiedText);
 		});
+	}
+
+	linkifyMentionsInChat($messages)
+	{
+		const $players = $('#centerContent a[href^="/Profile/View"]');
+		const playerNames = $players
+			.map((_, element) => 
+				this.stripLevelFromPlayerName($(element).text())
+			)
+			.get();
+
+		$messages
+			.filter((_, message) => /\B@\S+/.test($(message).text()))
+			.each((_, message) => {
+				const $message = $(message);
+				const text = $message.text();
+				const textWithMentions = text
+					.split('@')
+					.filter(text => text.trim().length > 0)
+					.map(mention => {
+						const result = this.findMatchingPlayerName(playerNames, mention);
+
+						if (result !== null) {
+							const {match, name} = result;
+							const [player] = $players
+								.filter((_, element) =>
+									this.stripLevelFromPlayerName($(element).text()) === name
+								)
+								.clone()
+								.text(`@${name}`);
+
+							return mention.replace(match, player.outerHTML);
+						}
+
+						return `@${mention}`;
+					})
+					.join();
+
+				$message.html(textWithMentions);
+			});
+
+		hoverInfo.initHover();
+	}
+
+	findMatchingPlayerName(playerNames, text)
+	{
+		const name = playerNames.find(name => 
+			text.toLowerCase().startsWith(name.toLowerCase())
+		);
+
+		if (typeof name !== 'undefined') {
+			const match = text.substring(0, name.length);
+			return {match, name};
+		}
+
+		return null;
+	}
+
+	stripLevelFromPlayerName(name)
+	{
+		return name.replace(/\s*\(\d+\)/, '');
 	}
 
 	/**
