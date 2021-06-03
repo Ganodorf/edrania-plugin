@@ -316,7 +316,7 @@ class HoverInfo
 				: $('<div>', {class: 'chrome-plugin-info-box__empty-avatar', text: 'Ingen bild'})
 		);
 
-		$aside.append($(`<h5>`, {text: name, css: {fontFamily: 'trajan', marginBottom: 0}}));
+		$aside.append($(`<h5>`, {text: name, css: {fontFamily: 'trajan', marginBottom: 0, textAlign: 'center'}}));
 		
 		if (typeof profileName !== 'undefined') {
 			$aside.append(`<div><em>@${profileName}</em></div><br/>`);
