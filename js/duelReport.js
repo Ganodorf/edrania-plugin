@@ -4,7 +4,7 @@ class DuelReport
 	{
 		this.initHighlightPlayerInReport();
 		this.initLinkGladiatorNamesInFooterToProfile();
-		this.initRematch();
+		this.initGladiatorRematch();
 	}
 
 	getOpponentElement()
@@ -34,7 +34,12 @@ class DuelReport
 		return (
 			$('b:contains("Lag"):first, b:contains("Team"):first')
 				.siblings()
-				.filter('a,b:not(:contains("Lag")),b:not(:contains("Team"))').length === 2
+				.filter((_, element) =>
+					$(element).is('a') ||
+					($(element).is('b') && 
+						!['Lag', 'Team'].some(text => text === $(element).text())
+					)
+				).length === 2
 		);
 	}
 
@@ -89,7 +94,7 @@ class DuelReport
 		hoverInfo.initHover();
 	}
 
-	initRematch()
+	initGladiatorRematch()
 	{
 		if (!(this.isPlayerInGame() && this.is1on1() && this.isOpponentGladiator())) {
 			return;
@@ -100,25 +105,27 @@ class DuelReport
 		const $rematch = $('<a/>', {
 			text: "Utmana igen",
 			href: `/Profile/Challenge/${opponentID}`,
-			click: function (event) {
-				if (!event.altKey) {
-					return;
-				}
+			on: {
+				click: function (event) {
+					if (!event.altKey) {
+						return;
+					}
 
-				event.preventDefault();
+					event.preventDefault();
 
-				const $link = $(this);
-				$link.css({
-					pointerEvents: 'none',
-					width: $link.outerWidth(),
-					textAlign: 'center'
-				});
-
-				challenge
-					.challengeWithDefaultTactics(opponentID)
-					.then(() => {
-						$link.text('Utmanad!');
+					const $link = $(this);
+					$link.css({
+						pointerEvents: 'none',
+						width: $link.outerWidth(),
+						textAlign: 'center'
 					});
+
+					challenge
+						.challengeWithDefaultTactics(opponentID)
+						.then(() => {
+							$link.text('Utmanad!');
+						});
+				},
 			},
 			class: 'fat',
 			css: {float: 'right'},
