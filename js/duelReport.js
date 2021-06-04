@@ -173,17 +173,25 @@ class DuelReport
 		const creatureName = this.getCreatureOpponentName();
 
 		this.getCreatureUrl(creatureName).then(creatureUrl => {
-			const result = /\/Creature\/ScenarioDisplay\/(?<creatureId>\d+)/
-				.exec(creatureUrl);
-			const {creatureId} = result.groups;
-
-			const $form = $('<form/>', {action: creatureUrl, method: 'post', css: {float: 'right'}});
+			const isTrainingCamp = typeof creatureUrl === 'undefined';
+			const rematchUrl = isTrainingCamp ? '/Training/Fight' : creatureUrl;
+			
+			const $form = $('<form/>', {action: rematchUrl, method: 'post', css: {float: 'right'}});
 			const $tactics = $('<input/>', {type: 'hidden', id: 'tactics', name: 'Tactic'});
 			const $retreatThreshold = $('<input/>', {type: 'hidden', id: 'retreat-threshold', name: 'RetreatThreshold'});
-			const $creatureId = $('<input/>', {type: 'hidden', id: 'creature-id', name: 'ID', value: creatureId});
+			const $fields = [$tactics, $retreatThreshold];
+
+			if (isTrainingCamp) {
+				$fields.push($('<input/>', {type: 'hidden', name: 'Condition', value: 'Normal'}));
+			}
+			else {
+				const {groups: {creatureId}} = /\/Creature\/ScenarioDisplay\/(?<creatureId>\d+)/.exec(creatureUrl);
+				$fields.push($('<input/>', {type: 'hidden', name: 'ID', value: creatureId}));
+			}
+
 			const $rematch = $('<a/>', {
 				text: "Strid igen",
-				href: creatureUrl,
+				href: rematchUrl,
 				on: {
 					click: function (event) {
 						if (!event.altKey) {
@@ -203,10 +211,7 @@ class DuelReport
 				class: 'fat'
 			});
 
-			$form.append($tactics);
-			$form.append($retreatThreshold);
-			$form.append($creatureId);
-			$form.append($rematch);
+			$form.append(...$fields, $rematch);
 
 			$('.nav-arrow').after($form);
 
