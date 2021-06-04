@@ -318,8 +318,11 @@ class HoverInfo
 
 		$aside.append($(`<h5>`, {text: name, css: {fontFamily: 'trajan', marginBottom: 0, textAlign: 'center'}}));
 		
-		if (typeof profileName !== 'undefined') {
+		if (typeof profileName !== 'undefined' && profileName.length > 0) {
 			$aside.append(`<div><em>@${profileName}</em></div><br/>`);
+		}
+		else {
+			$aside.append(`<div><em>[Bot]</em></div><br/>`);
 		}
 
 		$aside
