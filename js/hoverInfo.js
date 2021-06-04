@@ -321,7 +321,7 @@ class HoverInfo
 		if (typeof profileName !== 'undefined' && profileName.length > 0) {
 			$aside.append(`<div><em>@${profileName}</em></div><br/>`);
 		}
-		else {
+		else if (!this.isMyGladiator(profileHtml)) {
 			$aside.append(`<div><em>[Bot]</em></div><br/>`);
 		}
 
@@ -637,7 +637,7 @@ class HoverInfo
 	 */
 	getProfileName(html) {
 		if (this.isMyGladiator(html)) {
-			undefined;
+			return undefined;
 		}
 
 		return $(html).find('#centerContent table:first tbody tr:nth(1) td').text();
