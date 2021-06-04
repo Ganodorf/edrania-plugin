@@ -86,10 +86,29 @@ function sum(...values)
 
 // Display how much hp each threshold is
 const playerHP = getPlayerMaxHP();
-$('select[name=RetreatThreshold] option').each(function(){
+$('#RetreatThreshold option').each(function(){
 	const value = parseInteger($(this).val());
 	const thresholdHP = parseInteger(playerHP * (value / 100));
 	$(this).append(' (' + thresholdHP + ' hp)');
+});
+
+// Bring sensical order to tactics options
+$('#Tactic').each(function () {
+	const $select = $(this);
+	const $options = $select.find('option');
+	const selectedValue = $select.val();
+	const options = $options.map((_, option) => ({
+		label: $(option).text(),
+		value: option.value
+	}));
+	const optionsOrder = [0, 1, 5, 6, 2, 3, 4, 7, 9, 8];
+
+	$options.each((index, option) => {
+		const {label, value} = options[optionsOrder[index]];
+		$(option).text(label);
+		option.value = value;
+	});
+	$select.val(selectedValue);
 });
 
 chrome.storage.sync.get('edraniaConfig', function(data){
@@ -184,10 +203,7 @@ chrome.storage.sync.get('edraniaConfig', function(data){
 		}
 	}
 	else if (/Clan\/\d+\/Buildings\/\d+/.test(path)) {
-		const section = $('.clanBuildingSection h5').text();
-		if (section === 'Gruva' || section === 'Mine') {
-			new ClanMine();
-		}
+		new ClanBuilding();
 	}
 	else if (/Clan\/\d+\/Stockpile/.test(path)) {
 		new ClanStockpile();

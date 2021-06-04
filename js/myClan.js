@@ -7,25 +7,65 @@ class MyClan
 
 	initReplaceWorkDistrictWithMine()
 	{
-		profile.getClanUrl().then(clanUrl => {
-			if (clanUrl !== null && edraniaConfig.replaceWorkDistrictWithMine) {
-				this.replaceWorkDistrictWithMine(clanUrl);
+		if (!edraniaConfig.replaceWorkDistrictWithMine) {
+			return;
+		}
+
+		this.getMineUrl().then(this.replaceWorkDistrictWithMine);
+
+		chrome.storage.onChanged.addListener((changes, namespace) => {
+			if (namespace !== 'sync' || !('edraniaCache' in changes)) {
+				return;
 			}
-		})
+
+			const {newValue} = changes.edraniaCache;
+
+			if (newValue && newValue.mineUrl) {
+				this.replaceWorkDistrictWithMine(newValue.mineUrl);
+			}
+		});
 	}
 
-	replaceWorkDistrictWithMine(clanUrl)
+	getMineUrl()
 	{
-		$.get(`${clanUrl}/Buildings`).then(buildings => {
-			const mineUrl = $(buildings)
-				.find('#centerContent table')
-				.find('tr:contains("Gruva"), tr:contains("Mine")')
-				.find('td:nth(4) a')
-				.attr('href');
+		const deferred = $.Deferred();
 
-			$('#leftSideBar a[href="/Work"]')
-					.attr('href', mineUrl)
-					.text('Gruva')
+		chrome.storage.sync.get('edraniaCache', ({edraniaCache}) => {
+			// stale while revalidate
+			if (typeof edraniaCache.mineUrl !== 'undefined') {
+				deferred.resolve(edraniaCache.mineUrl);
+			}
+
+			profile.getClanUrl().then(clanUrl => {
+				if (clanUrl === null) {
+					delete edraniaCache.mineUrl;
+					chrome.storage.sync.set({edraniaCache});
+					deferred.reject();
+					return;
+				}
+
+				$.get(`${clanUrl}/Buildings`).then(buildings => {
+					const mineUrl = $(buildings)
+						.find('#centerContent table')
+						.find('tr:contains("Gruva"), tr:contains("Mine")')
+						.find('td:nth(4) a')
+						.attr('href');
+
+					if (mineUrl !== edraniaCache.mineUrl) {
+						chrome.storage.sync.set({edraniaCache: {...edraniaCache, mineUrl}});
+						deferred.resolve(mineUrl);
+					}
+				});
+			});
 		});
+
+		return deferred.promise();
+	}
+
+	replaceWorkDistrictWithMine(mineUrl)
+	{
+		$('#leftSideBar a[href="/Work"]')
+			.attr('href', mineUrl)
+			.text('Gruva')
 	}
 }

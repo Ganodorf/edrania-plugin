@@ -280,7 +280,7 @@ class HoverInfo
 	renderPlayerInfoBox(arsenalHtml, statisticsHtml, profileHtml)
 	{
 		// Dead?
-		if ($(profileHtml).find('.col-lg-12').children().first().is('h5')) {
+		if ($(profileHtml).find('#centerContent img[src$="gravsten.jpg"]').length > 0) {
 			const content = this.createDeadPlayerContent();
 			this.renderBox(content);
 			return content;
@@ -289,6 +289,9 @@ class HoverInfo
 		const hardestHit = this.getHardestHit(statisticsHtml);
 		const mostEvasions = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:nth(2) td:nth(1)').text();
 		const mostBlocks = $(statisticsHtml).find('.compact-table:nth(2) tbody tr:nth(3) td:nth(1)').text();
+		const name = this.getName(profileHtml);
+		const profileName = this.getProfileName(profileHtml);
+		const clanInfo = this.getClanInfo(profileHtml);
 		const race = this.getRace(profileHtml);
 		const level = this.getLevel(profileHtml);
 		const $avatar = $(profileHtml).find('#centerContent img').removeAttr('style');
@@ -298,10 +301,13 @@ class HoverInfo
 		const $avatarContainer = $('<div>', {class: 'chrome-plugin-info-box__avatar'});
 		const $aside = $('<div>', {css: {display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1}});
 
-		if (race !== undefined) {
-			$main.append(`<div><b>Ras (grad):</b> ${race} (${level})</div><br/>`);
+		$main.append(`<div><b>Ras (grad):</b> ${race} (${level})</div>`);
+
+		if (typeof clanInfo !== 'undefined') {
+			$main.append(`<div><b>Klan:</b> ${clanInfo}</div>`);
 		}
 
+		$main.append('<br/>');
 		$main.append(this.createArsenalContent(arsenalHtml));
 
 		$avatarContainer.append(
@@ -309,6 +315,15 @@ class HoverInfo
 				? $avatar.prop('outerHTML')
 				: $('<div>', {class: 'chrome-plugin-info-box__empty-avatar', text: 'Ingen bild'})
 		);
+
+		$aside.append($(`<h5>`, {text: name, css: {fontFamily: 'trajan', marginBottom: 0, textAlign: 'center'}}));
+		
+		if (typeof profileName !== 'undefined' && profileName.length > 0) {
+			$aside.append(`<div><em>@${profileName}</em></div><br/>`);
+		}
+		else if (!this.isMyGladiator(profileHtml)) {
+			$aside.append(`<div><em>[Bot]</em></div><br/>`);
+		}
 
 		$aside
 			.append($avatarContainer)
@@ -495,7 +510,7 @@ class HoverInfo
 				<tbody>
 					<tr>
 						<th>Högsta skada i laget:</th> 
-						<td class="text-right">${hardestHit}</td>
+						<td class="text-right text-error">${hardestHit}</td>
 					</tr>
 					<tr>
 						<th>Sammanlagd grad:</th>
@@ -530,7 +545,7 @@ class HoverInfo
 			 : 'N/A';
 		 const totalTeamLevel = sum(...teamMembers.map(({level}) => level || 0));
 		 const statistics = [
-			 {label: `Högsta skada i laget${hasCreatures ? '*' : ''}` , value: hardestHit},
+			 {label: `Högsta skada i laget${hasCreatures ? '*' : ''}`, value: `<span class="text-error">${hardestHit}</span>`},
 			 {label: 'Sammanlagd grad', value: totalTeamLevel},
 		 ];
 
@@ -615,6 +630,32 @@ class HoverInfo
 		 }
 
 		 return $(html).find('#centerContent h3').text();
+	}
+
+	/**
+	 * Get player profile name
+	 */
+	getProfileName(html) {
+		if (this.isMyGladiator(html)) {
+			return undefined;
+		}
+
+		return $(html).find('#centerContent table:first tbody tr:nth(1) td').text();
+	}
+
+	/**
+	 * Get player clan and title (if any)
+	 */
+	getClanInfo(html) {
+		const $clan = $(html).find('#centerContent table:first tbody tr:nth(9) td');
+
+		if ($clan.text().length === 0) {
+			return undefined;
+		}
+
+		const title = $(html).find('#centerContent table:first tbody tr:nth(10) td').text();
+
+		return `${$clan.html()} (${title})`;
 	}
 
 	/**
@@ -711,7 +752,7 @@ class HoverInfo
 				<tbody>
 					<tr>
 						<th>Högsta skada:</th>
-						<td class="text-right">${hardestHit}</td>
+						<td class="text-right text-error">${hardestHit}</td>
 					</tr>
 					<tr>
 						<th>Mest undvikningar:</th>
