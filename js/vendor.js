@@ -8,6 +8,10 @@ class Vendor
 
 	initPurchaseEquipmentWithoutConfirm()
 	{
+		if ($('#centerContent a[href^="/Vendor/Purchase/"]').length === 0) {
+			return;
+		}
+
 		$('.table-body-border tr').each((_, tableRow) => {
 			const $purchaseButton = $(tableRow).find('a[href^="/Vendor/Purchase/"]');
 			const itemID = $purchaseButton.attr('href').split('/').pop();
