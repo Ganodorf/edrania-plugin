@@ -158,7 +158,16 @@ class DuelReport
 		return $.get('/Creature/List').then(creaturesHtml => {
 			return $(creaturesHtml)
 				.find('a[href^="/Creature/ScenarioDisplay/"]')
-				.filter((_, element) => $(element).text() === creatureName)
+				.filter((_, element) => {
+					const name = $(element).text();
+
+					// "Armored zebra" is named merely "Zebra" in duel reports
+					if (creatureName === "Zebra") {
+						return name.toLowerCase().endsWith("zebra");
+					}
+
+					return name === creatureName;
+				})
 				.attr('href');
 		});
 	}
