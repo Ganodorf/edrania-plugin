@@ -6,6 +6,7 @@ class DuelReport
 		this.initLinkGladiatorNamesInFooterToProfile();
 		this.initGladiatorRematch();
 		this.initCreatureRematch();
+		this.initLinkRandomDuelBackToSearch();
 	}
 
 	getOpponentElement()
@@ -231,6 +232,20 @@ class DuelReport
 					);
 				});
 		})
+	}
+
+	initLinkRandomDuelBackToSearch()
+	{
+		$.get('/MyGlad/Profile/History/0').then(historyHtml => {
+			const $entry = $(historyHtml).find(`#centerContent a[href="${window.location.pathname}"]`);
+			const type = $entry.parent().siblings('td:nth(1)').text().trim();
+
+			if (type === 'Slumpduell' || type === 'Random encounter') {
+				$('.nav-arrow')
+					.removeAttr('onclick')
+					.wrap($('<a>', { href: '/Duel/Search' }));
+			}
+		});
 	}
 
 	isMacOs()
