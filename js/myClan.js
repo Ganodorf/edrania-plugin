@@ -51,7 +51,10 @@ class MyClan
 						.find('td:nth(4) a')
 						.attr('href');
 
-					if (mineUrl !== edraniaCache.mineUrl) {
+					if (
+						/^\/Clan\/\d+\/Buildings\/\d+$/.test(mineUrl) && 
+						mineUrl !== edraniaCache.mineUrl
+					) {
 						chrome.storage.sync.set({edraniaCache: {...edraniaCache, mineUrl}});
 						deferred.resolve(mineUrl);
 					}
