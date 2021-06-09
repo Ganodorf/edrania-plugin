@@ -30,7 +30,7 @@ class MyClan
 	{
 		const deferred = $.Deferred();
 
-		chrome.storage.sync.get('edraniaCache', ({edraniaCache}) => {
+		chrome.storage.sync.get('edraniaCache', ({edraniaCache = {}}) => {
 			// stale while revalidate
 			if (typeof edraniaCache.mineUrl !== 'undefined') {
 				deferred.resolve(edraniaCache.mineUrl);
@@ -51,7 +51,10 @@ class MyClan
 						.find('td:nth(4) a')
 						.attr('href');
 
-					if (mineUrl !== edraniaCache.mineUrl) {
+					if (
+						/^\/Clan\/\d+\/Buildings\/\d+$/.test(mineUrl) && 
+						mineUrl !== edraniaCache.mineUrl
+					) {
 						chrome.storage.sync.set({edraniaCache: {...edraniaCache, mineUrl}});
 						deferred.resolve(mineUrl);
 					}
