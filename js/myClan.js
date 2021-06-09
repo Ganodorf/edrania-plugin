@@ -30,7 +30,7 @@ class MyClan
 	{
 		const deferred = $.Deferred();
 
-		chrome.storage.sync.get('edraniaCache', ({edraniaCache}) => {
+		chrome.storage.sync.get('edraniaCache', ({edraniaCache = {}}) => {
 			// stale while revalidate
 			if (typeof edraniaCache.mineUrl !== 'undefined') {
 				deferred.resolve(edraniaCache.mineUrl);
