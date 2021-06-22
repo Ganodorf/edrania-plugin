@@ -198,7 +198,7 @@ class TeamGame
 				const textWithMentions = text
 					.split('@')
 					.filter(text => text.trim().length > 0)
-					.map(mention => {
+					.map((mention, index) => {
 						const result = this.findMatchingPlayerName(playerNames, mention);
 
 						if (result !== null) {
@@ -213,7 +213,7 @@ class TeamGame
 							return mention.replace(match, player.outerHTML);
 						}
 
-						return `@${mention}`;
+						return index > 0 || text.startsWith('@') ? `@${mention}` : mention;
 					})
 					.join();
 
@@ -353,9 +353,9 @@ class TeamGame
 	/**
 	 * The team count becomes out-of-sync every now and then. If so, fix it.
 	 */
-	 ensureTeamCountIsCorrect()
-	 {
-		 $('.teamGameTeamContainer').each(function () {
+	ensureTeamCountIsCorrect()
+	{
+		$('.teamGameTeamContainer').each(function () {
 			const $container = $(this);
 			const $count = $container.find('[id^="memberCount"]');
 			const count = $container.find('[id^="memberRow"]').length;
@@ -363,6 +363,6 @@ class TeamGame
 			if (count !== parseInteger($count.text())) {
 				$count.text(count);
 			}
-		 });
-	 }
+		});
+	}
 }
